@@ -1,0 +1,87 @@
+<CreateStaffWindow>:
+    name: "create_staff"
+    fr_name: fr_name
+    lt_name: lt_name
+    phone: phone
+    email: email
+    password: password
+    emp_type: emp_type
+
+	FloatLayout:
+
+		canvas:
+			Rectangle:
+				source: 'Images/grad1.jpg'
+				size: self.size
+				pos: self.pos
+
+        Label:
+            text: "First Name: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.80}
+        TextInput:
+            id: fr_name
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .825}
+        Label:
+            text: "Last Name: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.70}
+        TextInput:
+            id: lt_name
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .725}
+        Label:
+            text: "Phone: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.60}
+        TextInput:
+            id: phone
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .625}
+        Label:
+            text: "Email: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.5}
+        TextInput:
+            id: email
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .525}
+        Label:
+            text: "Password: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.4}
+        TextInput:
+            id: password
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .425}
+        Label:
+            text: "Staff Type: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.3}
+        TextInput:
+            id: emp_type
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .325}
+        Button:
+            text: "Create Account"
+            size_hint: (.25, .1)
+            pos_hint: {'center_x': .5, 'y': .1725}
+            on_release:
+                root.manager.transition.direction = "right"
+                root.creat_acc()
+                root.reset_inputs()
+        Button:
+            text: "< Back"
+            size_hint: (.1, .05)
+            pos_hint: {'center_x':.5, 'center_y':.1}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "admin_action"
+                root.reset_inputs()

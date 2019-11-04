@@ -1,0 +1,28 @@
+<UserTypeWindow>:
+    name: "user"
+
+    FloatLayout:
+
+        canvas:
+            Rectangle:
+                source: 'Images/Image3.jpg'
+                size: self.size
+                pos: self.pos
+
+        Button:
+            text: "Staff"
+			font_size: 16
+            size_hint: (.33, .1)
+            pos_hint: {"center_x": .5, "top": .70}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.staff()
+
+        Button:
+            text: "Patient"
+			font_size: 16
+            size_hint: (.33, .1)
+            pos_hint: {"center_x": .5, "top": .30}
+            on_release:
+                root.manager.transition.direction = "right"
+                root.patient()

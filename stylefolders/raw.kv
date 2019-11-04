@@ -1,0 +1,90 @@
+<RegisterAccountWindow>:
+    name: "reg_acc_win"
+    fr_name: fr_name
+    lt_name: lt_name
+    phone: phone
+    email: email
+    password: password
+	canvas:
+        Rectangle:
+            source: 'Images/grad2.jpg'
+            size: self.size
+            pos: self.pos
+    FloatLayout:
+        Label:
+            text: "First Name: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.75}
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: fr_name
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .7725}
+        Label:
+            text: "Last Name: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.65}
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: lt_name
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .675}
+        Label:
+            text: "Phone: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.35}
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: phone
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .3725}
+        Label:
+            text: "Email: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.55}
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: email
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .5725}
+        Label:
+            text: "Password: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.45}
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: password
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .4727}
+        Button:
+            text: "Create Account"
+			font_size: 16
+            size_hint: (.25, .1)
+            pos_hint: {'center_x': .5, 'y': .15}
+            on_release:
+                root.manager.transition.direction = "right"
+                root.reg_accout()
+                root.reset_inputs()
+        Button:
+            text: "Back >"
+            size_hint: (.1, .05)
+            pos_hint: {'center_x':.5, 'center_y':.1}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "pat_login"
+                root.reset_inputs()

@@ -1,0 +1,52 @@
+<StaffLoginWindow>:
+    name: "st_login"
+
+    email: email
+    password: password
+
+    FloatLayout:
+        canvas:
+            Rectangle:
+                source: 'Images/grad1.jpg'
+                size: self.size
+                pos: self.pos
+        Label:
+            text: "Email: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.50}
+            color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: email
+            multiline: False
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .525}
+        Label:
+            text: "Password: "
+            size_hint: (.25, .10)
+            pos_hint: {'x': .10, 'y':.40}
+            color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: password
+            multiline: False
+            password: True
+            size_hint: (.3, .05)
+            pos_hint: {'center_x': .5, 'y': .425}
+        Button:
+            text: "Enter"
+            size_hint: (.25, .10)
+            pos_hint: {'center_x':.5, 'center_y':.25}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.login()
+        Button:
+            text: "< Back"
+            size_hint: (.1, .05)
+            pos_hint: {'center_x':.5, 'center_y':.1}
+            on_release:
+                root.reset_inputs()
+                root.manager.transition.direction = "right"
+                root.manager.current = "staff_type"

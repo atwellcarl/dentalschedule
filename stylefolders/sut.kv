@@ -1,0 +1,40 @@
+<StaffUserType>
+    name: "staff_type"
+
+	canvas:
+        Rectangle:
+            source: 'Images/grad1.jpg'
+            size: self.size
+            pos: self.pos
+
+    Button:
+        text: "Admin Login"
+		font_size: 16
+        size_hint: (.33, .1)
+        pos_hint: {"center_x": .5, "top": .766666}
+        on_release:
+            root.manager.transition.direction = "left"
+            root.admin()
+    Button:
+        text: "Doctor Login"
+		font_size: 16
+        size_hint: (.33, .1)
+        pos_hint: {"center_x": .5, "center_y": .5}
+        on_release:
+            root.manager.transition.direction = "left"
+            root.doctor()
+    Button:
+        text: "Hygenist Login"
+		font_size: 16
+        size_hint: (.33, .1)
+        pos_hint: {"center_x": .5, "top": .333333}
+        on_release:
+            root.manager.transition.direction = "left"
+            root.hygenist()
+    Button:
+        text: "< Back"
+        size_hint: (.1, .05)
+        pos_hint: {"center_x": .5, "top": .1}
+        on_release:
+            root.manager.transition.direction = "right"
+            root.manager.current = "user"

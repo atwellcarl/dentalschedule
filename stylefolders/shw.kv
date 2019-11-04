@@ -1,0 +1,51 @@
+<StaffHomeWindow>:
+    name: "st_home"
+    appointment: appointment
+
+	on_enter: root.get_app()
+
+    FloatLayout:
+
+		canvas:
+			Rectangle:
+				source: 'Images/grad1.jpg'
+				size: self.size
+				pos: self.pos
+        Label:
+            id: appointment
+            text: "No Appointments"
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 14
+            pos_hint: {"center_x": .5, "center_y": .65 }
+
+		#ScrollView:
+		#	do_scroll_x: False
+		#	do_scroll_y: True
+#
+#			Label:
+#				id: appointment
+#				size_hint: (.25, .1)
+#				pos_hint: {"center_x": .1, "center_y": .7 }
+#				size_hint_y: None
+#				height: self.texture_size[1]
+#				padding: 10, 10
+#				color: (0, 0, 0, 1)
+#				markup: True
+#				font_size: 14
+#				text: "No Appointments"
+        Button:
+            text: "Reload Appointments"
+            size_hint: (.25, .1)
+            pos_hint: {"center_x": .5, "center_y": .3 }
+            on_release:
+                root.get_app()
+        Button:
+            text: "Logout"
+            size_hint: (.1, .05)
+            pos_hint: {'x':.9, 'y':.91}
+            on_release:
+                root.logout()
+                root.manager.transition.direction = "left"
+                root.manager.current = "staff_type"

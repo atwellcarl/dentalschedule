@@ -1,0 +1,20 @@
+<ManageAccountsWindow>:
+    name: "manage_accounts"
+
+	canvas:
+		Rectangle:
+			source: 'Images/grad1.jpg'
+			size: self.size
+			pos: self.pos
+
+
+    FloatLayout:
+        Label:
+            text: "Remove and view accounts"
+		Button:
+            text: "< Back"
+            size_hint: (.1, .05)
+            pos_hint: {'center_x':.5, 'center_y':.1}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "admin_action"
