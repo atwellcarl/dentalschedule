@@ -23,13 +23,14 @@ class PatientHomeWindow(Screen):
 
     def get_app(self):
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
+        print(schedule)
         if(len(schedule) != 0):
             self.appointment.text = ""
             for app in schedule:
                 line1 = "Date: {}".format(app[0])
                 line2 = "Time: {}".format(app[1])
                 line3 = "Description: {}".format(app[3])
-                line4 = "With: Dr {} {}".format(app[4], app[5])
+                line4 = "With: Dr {} {} and Hygenist {} {}".format(app[4], app[5], app[6], app[7])
                 self.appointment.text += "{}\n {}:00\n {}\n {}\n\n".format(line1, line2, line3, line4)
         else:
             self.appointment.text = "No Appointments Scheduled"

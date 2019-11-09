@@ -107,22 +107,26 @@ def view_user_schedule(user_id, user_type):
     if user_type == "Patient":
         info_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                            WHERE pat_id == {} AND emp_tye LIKE "%Doctor%" """.format(user_id)
+                            WHERE pat_id == {} AND emp_type LIKE "%Doctor%" """.format(user_id)
 
-        hygenist_query = """SELECT emp_fn, emp_ln
-                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                             WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
+        hygenist_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
+                            FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
+                            WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
+
+        # hygenist_query = """SELECT emp_fn, emp_ln
+        #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
+        #                      WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
 
         appointment = []
         for row in c.execute(info_query):
-            appoinment.append(row[0])
-            appoinment.append(row[1])
-            appoinment.append(row[2])
-            appoinment.append(row[3])
-            appoinment.append(row[4])
-            appoinment.append(row[5])
-            ls.append(appoinment)
-            appoinment = []
+            print(row)
+            appointment.append(row[0])
+            appointment.append(row[1])
+            appointment.append(row[2])
+            appointment.append(row[3])
+            appointment.append(row[4])
+            appointment.append(row[5])
+            # ls.append(appoinment)
             # ls.append(s)
         # for row in c.execute(hygenist_query):
         #     appointment.append(row[0])
@@ -131,13 +135,16 @@ def view_user_schedule(user_id, user_type):
         #     appointment = []
         #     for app in appointment:
         #         print(app)
-          for row in c.execute(hygenist_query):
-            appointment.append(row[0])
-            appointment.append(row[1])
+        print(c.execute(hygenist_query))
+        for row in c.execute(hygenist_query):
+            print(appointment)
+            appointment.append(row[4])
+            appointment.append(row[5])
             ls.append(appointment)
-            appointment = []
-            for app in appointment:
-                print(app)
+            # appointment = []
+            # for app in appointment:
+            #     print(app)
+        print(ls)
 
     elif user_type == "Employee":
         info_query = """SELECT date, start_time, end_time, description, pat_fn, pat_ln
