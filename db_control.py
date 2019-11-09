@@ -111,7 +111,7 @@ def view_user_schedule(user_id, user_type):
     if user_type == "Patient":
         info_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                            WHERE pat_id == {} AND emp_tye LIKE "%Doctor%" """.format(user_id)
+                            WHERE pat_id == {} AND emp_type LIKE "%Doctor%" """.format(user_id)
 
         hygenist_query = """SELECT emp_fn, emp_ln
                              FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
