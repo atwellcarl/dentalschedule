@@ -1,6 +1,7 @@
 <MakeAppointmentWindow>:
     name: "make_appointment"
     description: description
+    choose_button: choose_button
 
     FloatLayout:
 		canvas:
@@ -21,11 +22,12 @@
             multiline: False
             pos_hint: {"center_x": .5, "center_y": .85 }
         Button:
+            id: choose_button
             text: "choose a doctor"
             size_hint: (.25, .1)
             pos_hint: {"center_x": .5, "center_y": .7 }
             on_release:
-                root.choose()
+                root.choose_dr()
         Button:
             text: "Back >"
             size_hint: (.1, .05)

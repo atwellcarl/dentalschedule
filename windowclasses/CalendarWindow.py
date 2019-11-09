@@ -34,8 +34,23 @@ class CalendarWindow(Screen):
         list = db.view_user_schedule(dr_id, "Employee")
         # build a string of format "2019-10-30-11" "yr-mon-day-strTime"
         cur_app = ("{}-{}-{}-{}".format(self.year, self.month, day, j + 8))
-
-        print(cur_app)
+        for app in list:
+            dr_schedule = ("{}-{}".format(app[0], app[1]))
+            if(dr_schedule == cur_app):
+                return False
+        return True
+    def patient_scheduled(self, j, i, day):
+        # dr_id = db.get_pat_id(pwl.user_info[0])
+        list = db.view_user_schedule(plw.user_info[0], "Employee")
+        # build a string of format "2019-10-30-11" "yr-mon-day-strTime"
+        cur_app = ("{}-{}-{}-{}".format(self.year, self.month, day, j + 8))
+        for app in list:
+            pat_schedule = ("{}-{}".format(app[0], app[1]))
+            print(cur_app)
+            print(pat_schedule)
+            if(pat_schedule == cur_app):
+                return False
+        return True
 
     def valid_time(self, j, i):
         # Why is the first week of january Red? 1st-4th
@@ -55,7 +70,10 @@ class CalendarWindow(Screen):
             elif(int(button_day) == self.time.tm_mday
                  and (j + 8) <= self.time.tm_hour):
                     return False
-            self.employee_scheduled(j, i, button_day)
+            elif(self.employee_scheduled(j, i, button_day) == False):
+                return False
+            elif(self.patient_scheduled(j, i, button_day) == False):
+                return False
         return True
 
     def pop_cal(self):
@@ -100,13 +118,11 @@ class CalendarWindow(Screen):
         elif(self.week >= 4 and self.month < 12):
             self.week = 1
             self.month += 1
-            self.p = self.c.monthdatescalendar(self.year, self.month)
         elif(self.week >=4 and self.month == 12):
             self.week = 1
             self.month = 1
             self.year += 1
-            self.p = self.c.monthdatescalendar(self.year, self.month)
-
+        self.p = self.c.monthdatescalendar(self.year, self.month)
         self.pop_cal()
 
     def prev_week(self):
@@ -125,5 +141,5 @@ class CalendarWindow(Screen):
     def pressed(self, instance):
         start = instance.text.split(":")[0]
         db.create_appointment(instance.id, int(start),
-                              plw.user_info[3], 1, plw.user_info[2], maw.dr_info[0])
+                              plw.user_info[3], 1, plw.user_info[2], maw.dr_info[0], maw.dr_info[1])
         wm.screen_manager.current = "pat_home"

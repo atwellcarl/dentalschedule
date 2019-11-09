@@ -47,7 +47,6 @@ def is_user(email, password, usr_type):
 
 # Returns a patients ID given their email as the only parameter
 def get_pat_id(email):
-    print(email)
     id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "%{}%" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
@@ -62,7 +61,6 @@ def get_pat_id(email):
 
 # Returns an employees ID given their email as the only parameter
 def get_emp_id(email):
-    print(email)
     id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "%{}%" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
@@ -77,7 +75,6 @@ def get_emp_id(email):
 
 # Returns a patients email, given their ID
 def get_pat_email(id_num):
-    print(id_num)
     email_query = """SELECT pat_email FROM Patient WHERE pat_id LIKE "%{}%" """.format(id_num)
     c.execute(email_query)
     email = c.fetchone()
@@ -92,7 +89,6 @@ def get_pat_email(id_num):
 
 # Returns an employees email, given their ID
 def get_emp_email(id_num):
-    print(id_num)
     email_query = """SELECT emp_email FROM Employee WHERE emp_id LIKE "%{}%" """.format(id_num)
     c.execute(email_query)
     email = c.fetchone()
@@ -121,8 +117,6 @@ def view_user_schedule(user_id, user_type):
             appoinment.append(row[4])
             appoinment.append(row[5])
             ls.append(appoinment)
-            for app in appoinment:
-                print(app)
             appoinment = []
             # ls.append(s)
 
@@ -194,12 +188,6 @@ def create_user(fn, ln, email, password, phone, emp_type, usr_type):
 # Adds appointment info to the appointment table and relationship tables to relate patients, employees and appointments
 def create_appointment(date, start, description, duration, pat_email, emp_email):
     # create appointment, need to figure out how to do math on times
-    print(date)
-    print(start)
-    print(description)
-    print(duration)
-    print(pat_email)
-    print(emp_email)
 
     end = start + duration
     print("Date: {}   Start: {} End: {}\n Description: {}\n".format(date, start, end, description))
