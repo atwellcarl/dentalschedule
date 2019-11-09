@@ -25,7 +25,7 @@ def is_user(email, password, usr_type):
     elif usr_type == "Patient":
         valid_query = """SELECT pat_password
                               FROM Patient
-                              WHERE pat_email LIKE "%{}%" """ .format(email)
+                              WHERE pat_email LIKE "%{}%" """.format(email)
         c.execute(valid_query)
         output = c.fetchone()
         if output is not None:
@@ -110,21 +110,30 @@ def view_user_schedule(user_id, user_type):
     ls = []
     if user_type == "Patient":
         info_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
-                        FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                        WHERE pat_id == {} """.format(user_id)
-        appoinment = []
+                            FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
+                            WHERE pat_id == {} AND emp_tye LIKE "%Doctor%" """.format(user_id)
+
+        hygenist_query = """SELECT emp_fn, emp_ln
+                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
+                             WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
+
+        appointment = []
         for row in c.execute(info_query):
-            appoinment.append(row[0])
-            appoinment.append(row[1])
-            appoinment.append(row[2])
-            appoinment.append(row[3])
-            appoinment.append(row[4])
-            appoinment.append(row[5])
-            ls.append(appoinment)
-            for app in appoinment:
-                print(app)
-            appoinment = []
+            appointment.append(row[0])
+            appointment.append(row[1])
+            appointment.append(row[2])
+            appointment.append(row[3])
+            appointment.append(row[4])
+            appointment.append(row[5])
+
             # ls.append(s)
+        for row in c.execute(hygenist_query):
+            appointment.append(row[0])
+            appointment.append(row[1])
+            ls.append(appointment)
+            appointment = []
+            for app in appointment:
+                print(app)
 
     elif user_type == "Employee":
         info_query = """SELECT date, start_time, end_time, description, pat_fn, pat_ln
@@ -148,7 +157,6 @@ def view_user_schedule(user_id, user_type):
             appoinment.append(row[5])
             ls.append(appoinment)
             appoinment = []
-
 
     return ls
 
@@ -192,14 +200,15 @@ def create_user(fn, ln, email, password, phone, emp_type, usr_type):
 
 
 # Adds appointment info to the appointment table and relationship tables to relate patients, employees and appointments
-def create_appointment(date, start, description, duration, pat_email, emp_email):
+def create_appointment(date, start, description, duration, pat_email, dr_email, hyg_email):
     # create appointment, need to figure out how to do math on times
     print(date)
     print(start)
     print(description)
     print(duration)
     print(pat_email)
-    print(emp_email)
+    print(hyg_email)
+    print(dr_email)
 
     end = start + duration
     print("Date: {}   Start: {} End: {}\n Description: {}\n".format(date, start, end, description))
@@ -208,16 +217,19 @@ def create_appointment(date, start, description, duration, pat_email, emp_email)
     c.execute(appt_query)
 
     pat_id = get_pat_id(pat_email)
-    emp_id = get_emp_id(emp_email)
+    dr_id = get_emp_id(dr_email)
+    hyg_id = get_emp_id(hyg_email)
     appt_id = c.lastrowid
 
     # create request relationship with most recent appointments id
     print(pat_id)
-    print("dr {}".format(emp_id))
+    print("dr {}".format(dr_id))
+    print("hygenist {}".format(hyg_id))
     create_request(pat_id, appt_id)
 
     # create works relationship
-    create_work(emp_id, appt_id)
+    create_work(hyg_id, appt_id)
+    create_work(dr_id, appt_id)
     commit()
 
 
@@ -233,3 +245,49 @@ def create_work(user_id, appt_id):
     print("{} {} ", user_id, appt_id)
     work_query = """INSERT INTO Works(appt_id, emp_id) VALUES ({}, {})""".format(appt_id, user_id)
     c.execute(work_query)
+
+
+def get_appt_id(row, user_id, user_type):
+    if user_type == "Patient":
+        appt_id_q = """SELECT appt_id 
+                        FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
+                        WHERE pat_id = {}}
+                        LIMIT 1 OFFSET {}}""".format(user_id, row)
+        c.execute(appt_id_q)
+        if appt_id_q is None:
+            print("No id found")
+            return None
+
+            return appt_id_q[0]
+
+    elif user_type == "Employee":
+        appt_id_q = """SELECT appt_id 
+                         FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
+                         WHERE emp_id = {}
+                         LIMIT 1 OFFSET {}""".format(user_id, row)
+        c.execute(appt_id_q)
+        if appt_id_q is None:
+            print("No id found")
+            return None
+
+        return appt_id_q[0]
+
+
+# Deletes an appointment given what row it is in the database (zero indexed)
+def delete_appt(row, user_id, user_type):
+    appt_id = get_appt_id(row, user_id, user_type)
+
+    del_request = """DELETE FROM Requests
+                        WHERE appt_id = {}""".format(appt_id)
+
+    del_works = """DELETE FROM Works
+                            WHERE appt_id = {}""".format(appt_id)
+    
+    del_appt = """DELETE FROM Appointment
+                            WHERE appt_id = {}""".format(appt_id)
+
+    c.execute(del_request)
+    c.execute(del_works)
+    c.execute(del_appt)
+
+    commit()
