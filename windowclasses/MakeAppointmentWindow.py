@@ -6,20 +6,30 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+
 from windowclasses import WindowManager as mw
 from windowclasses import PatientLoginWindow as plw
 import db_control as db
 
-
 dr_info = [None] * 4
+dr_button = []
+hygen_button = []
 class MakeAppointmentWindow(Screen):
     kv = Builder.load_file("stylefolders/maw.kv")
     description = ObjectProperty(None)
     choose_button = ObjectProperty(None)
     dr_list = []
 
+    def no_func(self, button_text):
+        # self.remove_widget(self.choose_button)
+        self.button = Button(text = button_text, size_hint = (.25, .1),
+                        pos_hint = {"center_x": .5, "center_y": .7})
+        self.add_widget(self.button)
+
     def choose_dr(self):
-        print("cjhoosing")
+        self.button = Button(text = "Choose a Doctor", size_hint = (.25, .1),
+                        pos_hint = {"center_x": .5, "center_y": .7})
+        # self.button.bind(on_release = self.choose_dr())
         emp_list = db.list_employees()
         for employee in emp_list:
             if(employee[0] == "Doctor"):
@@ -30,10 +40,12 @@ class MakeAppointmentWindow(Screen):
             pos_hint = {"center_x": .5, "center_y": y_pos })
             self.b.bind(on_release = self.dr_pressed)
             self.add_widget(self.b)
+            dr_button.append(self.b)
             y_pos -= .1
+        self.no_func("Choose a Doctor")
+        # self.choose_button.bind(on_release = self.no_func)
 
     def choose_hygen(self):
-        print("choosing hygen")
         emp_list = db.list_employees()
         for employee in emp_list:
             if(employee[0] == "Hygenist"):
@@ -44,6 +56,7 @@ class MakeAppointmentWindow(Screen):
             pos_hint = {"center_x": .5, "center_y": y_pos })
             self.b.bind(on_release = self.hygen_pressed)
             self.add_widget(self.b)
+            hygen_button.append(self.b)
             y_pos -= .1
 
     def dr_pressed(self, instance):
@@ -51,8 +64,11 @@ class MakeAppointmentWindow(Screen):
             dr = "{} {}".format(doctor[1], doctor[2])
             if(instance.text == dr):
                 dr_info[0] = doctor[3]
-        self.choose_button.text = "Choose A Hygenist"
+        # self.choose_button.text = "Choose A Hygenist"
         self.dr_list = []
+        for button in dr_button:
+            self.remove_widget(button)
+        self.no_func("Choose a hygenist")
         self.choose_hygen()
 
     def hygen_pressed(self, instance):
@@ -60,6 +76,9 @@ class MakeAppointmentWindow(Screen):
             dr = "{} {}".format(doctor[1], doctor[2])
             if(instance.text == dr):
                 dr_info[1] = doctor[3]
+        for button in hygen_button:
+            self.remove_widget(button)
+        self.no_func("Choose a Doctor")
         plw.user_info[3] = self.description.text
         mw.screen_manager.current = "calendar"
         self.description.text = ""

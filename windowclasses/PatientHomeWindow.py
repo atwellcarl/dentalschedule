@@ -6,6 +6,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+
 from windowclasses import WindowManager as mw
 from windowclasses import PatientLoginWindow as plw
 import db_control as db
@@ -23,15 +24,18 @@ class PatientHomeWindow(Screen):
 
     def get_app(self):
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
-        print(schedule)
         if(len(schedule) != 0):
             self.appointment.text = ""
+            # print()
+            # print("Appointments")
             for app in schedule:
+                # print(app)
                 line1 = "Date: {}".format(app[0])
                 line2 = "Time: {}".format(app[1])
                 line3 = "Description: {}".format(app[3])
                 line4 = "With: Dr {} {} and Hygenist {} {}".format(app[4], app[5], app[6], app[7])
                 self.appointment.text += "{}\n {}:00\n {}\n {}\n\n".format(line1, line2, line3, line4)
+                # print()
         else:
             self.appointment.text = "No Appointments Scheduled"
 

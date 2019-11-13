@@ -1,0 +1,15 @@
+<PatientEditAppWindow>:
+    name: "pat_edit_app"
+    FloatLayout:
+        canvas:
+            Rectangle:
+                source: "Images/grad2.jpg"
+                size: self.size
+                pos: self.pos
+        Button:
+            text: "Back"
+            size_hint: (.1, .05)
+            pos_hint: {'x':.9, 'y':.91}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "pat_home"

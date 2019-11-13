@@ -24,8 +24,18 @@ class CalendarWindow(Screen):
     # if(week_math[0] == 0 and time.tm_mday%7 == 0):
     #     week = int(time.tm_mday/7)
     # else:
-    week = int(time.tm_mday/7)
-
+    #     week = int(time.tm_mday/7)
+    temp = time.tm_mday/7
+    if(temp <= 1):
+        week = 1
+    elif(temp <= 2):
+        week = 2
+    elif(temp <= 3):
+        week = 3
+    elif(temp <= 4):
+        week = 4
+    else:
+        week = 5
     c = calendar.TextCalendar(calendar.SUNDAY)
     p = c.monthdatescalendar(year, month)
 
@@ -41,14 +51,17 @@ class CalendarWindow(Screen):
         return True
     def patient_scheduled(self, j, i, day):
         # dr_id = db.get_pat_id(pwl.user_info[0])
-        list = db.view_user_schedule(plw.user_info[0], "Employee")
+        list = db.view_user_schedule(plw.user_info[0], "Patient")
         # build a string of format "2019-10-30-11" "yr-mon-day-strTime"
         cur_app = ("{}-{}-{}-{}".format(self.year, self.month, day, j + 8))
+        i = 0
         for app in list:
             pat_schedule = ("{}-{}".format(app[0], app[1]))
-            print(cur_app)
-            print(pat_schedule)
+            # print("{}: {}".format(i, cur_app))
+            # print("{}: {}".format(i, pat_schedule))
+            i += 1
             if(pat_schedule == cur_app):
+                print("Conflict found, returning false")
                 return False
         return True
 
@@ -138,8 +151,18 @@ class CalendarWindow(Screen):
         self.p = self.c.monthdatescalendar(self.year, self.month)
         self.pop_cal()
 
+
+    def sucessful_app(self, instance):
+        popup = Popup(title = "Appointment Made!",
+                  content = Label(text = "Your appointment has been successfully scheduled."),
+                  size_hint = (None, None), size = (400, 400))
+        popup.open()
+
+
     def pressed(self, instance):
         start = instance.text.split(":")[0]
         db.create_appointment(instance.id, int(start),
                               plw.user_info[3], 1, plw.user_info[2], maw.dr_info[0], maw.dr_info[1])
+        # print("creating an app with {} and {}".format(maw.dr_info[0], maw.dr_info[1]))
         wm.screen_manager.current = "pat_home"
+        self.sucessful_app(instance)

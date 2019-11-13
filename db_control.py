@@ -116,35 +116,35 @@ def view_user_schedule(user_id, user_type):
         # hygenist_query = """SELECT emp_fn, emp_ln
         #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
         #                      WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
-
         appointment = []
         for row in c.execute(info_query):
-            print(row)
+            # print(row)
+            temp = "{} {}".format(row[0], row[1])
             appointment.append(row[0])
             appointment.append(row[1])
             appointment.append(row[2])
             appointment.append(row[3])
             appointment.append(row[4])
             appointment.append(row[5])
-            # ls.append(appoinment)
             # ls.append(s)
+            for tow in c.execute(hygenist_query):
+                # print(tow)
+                temp1 = "{} {}".format(tow[0], tow[1])
+                if(temp == temp1):
+                    # print(temp1)
+                    # print(temp)
+                    appointment.append(tow[4])
+                    appointment.append(tow[5])
+            ls.append(appointment)
+            appointment = []
+        #     for app in appointment:
+        #         print(app)
+        # print(ls)
+
+        #
         # for row in c.execute(hygenist_query):
         #     appointment.append(row[0])
         #     appointment.append(row[1])
-        #     ls.append(appointment)
-        #     appointment = []
-        #     for app in appointment:
-        #         print(app)
-        print(c.execute(hygenist_query))
-        for row in c.execute(hygenist_query):
-            print(appointment)
-            appointment.append(row[4])
-            appointment.append(row[5])
-            ls.append(appointment)
-            # appointment = []
-            # for app in appointment:
-            #     print(app)
-        print(ls)
 
     elif user_type == "Employee":
         info_query = """SELECT date, start_time, end_time, description, pat_fn, pat_ln

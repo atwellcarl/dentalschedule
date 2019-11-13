@@ -41,12 +41,19 @@
             #on_release:
             #    root.get_app()
         Button:
-            text: "Make an Appointment"
+            text: "Make An Appointment"
             size_hint: (.25, .1)
             pos_hint: {"center_x": .5, "center_y": .3 }
             on_release:
                 root.manager.transition.direction = "right"
                 root.make_appointment()
+        Button:
+            text: "Delete/Edit Appointment"
+            size_hint: (.25, .1)
+            pos_hint: {"center_x": .5, "center_y": .15}
+            on_release:
+                root.manager.transition.dorection = "right"
+                root.manager.current = "pat_edit_app"
         Button:
             text: "Logout"
             size_hint: (.1, .05)
