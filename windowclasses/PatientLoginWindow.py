@@ -9,6 +9,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
+
+import hashlib, binascii, os
 import db_control as db
 
 user_info = [None] * 4
@@ -29,6 +31,8 @@ class PatientLoginWindow(Screen):
             wm.screen_manager.current = "pat_home"
         else:
             self.invalid_pat_login()
+
+
 
     def invalid_pat_login(self):
         popup = Popup(title = "Login Failed",

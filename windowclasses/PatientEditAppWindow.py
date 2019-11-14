@@ -23,16 +23,19 @@ class PatientEditAppWindow(Screen):
         pos_x = .15
         pos_y = .65
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
+        row = 0
         if(len(schedule) != 0):
             self.appointment.text = ""
             for app in schedule:
-                self.button = Button(text = "Date: {}\nTime:{}:00\nWith: Dr: {} {}".format(app[0],app[1],app[4],app[5]),
+                self.button = Button(id = str(row), text = "Date: {}\nTime:{}:00\nWith: Dr: {} {}".format(app[0],app[1],app[4],app[5]),
                     font_size = 16, size_hint = (.225, .125),
                     pos_hint = {"x": pos_x, "y": pos_y})
+                self.button.bind(on_release = self.delete_app)
                 self.add_widget(self.button)
                 buttons.append(self.button)
                 pos_y -= .15
-                
+                row += 1
+
                 if (pos_y <= .1):
                     pos_x += .25
                     pos_y = .65
@@ -43,6 +46,10 @@ class PatientEditAppWindow(Screen):
                 #self.appointment.text += "{}\n {}:00\n {}\n {}\n\n".format(line1, line2, line3, line4)
         else:
             self.appointment.text = "No Appointments Scheduled"
+
     def remove_buttons(self):
         for item in buttons:
             self.remove_widget(item)
+    def delete_app(self, instance):
+        print("{} {} {}".format(int(instance.id), plw.user_info[0], "Patient"))
+        # db.delete_appt(int(instance.id), plw.user_info[0], "Patient")

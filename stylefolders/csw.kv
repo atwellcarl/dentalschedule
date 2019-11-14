@@ -58,11 +58,7 @@
         TextInput:
             id: password
             multiline: False
-<<<<<<< HEAD
-            password: True
-=======
 			password: True
->>>>>>> b36a6118d442e6dd1e532dbd82ff9b23ee9d6ea7
             size_hint: (.3, .05)
             pos_hint: {'center_x': .5, 'y': .425}
         Label:
@@ -81,7 +77,6 @@
             on_release:
                 root.manager.transition.direction = "right"
                 root.creat_acc()
-                root.reset_inputs()
         Button:
             text: "< Back"
             size_hint: (.1, .05)

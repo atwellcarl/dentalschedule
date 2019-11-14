@@ -68,11 +68,11 @@ class CalendarWindow(Screen):
         # Why is the first week of january Red? 1st-4th
         button_day = str(self.p[self.week][i]).split("-")[2]
         # if its the weekend
+        temp = True
         if(i ==0 or i == 6):
-            return False
+            temp = False
         if(self.time.tm_year == self.year):
             # if the day already passed
-            temp = True
             if(int(button_day) < self.time.tm_mday
             and self.month == self.time.tm_mon):
                 temp = False

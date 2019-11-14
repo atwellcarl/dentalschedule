@@ -25,6 +25,7 @@
             pos_hint: {"center_x": .5, "center_y": .3 }
             on_release:
                 root.manager.transition.direction = "right"
+                root.clean_labels()
                 root.make_appointment()
         Button:
             text: "Delete/Edit Appointment"
@@ -32,6 +33,7 @@
             pos_hint: {"center_x": .5, "center_y": .15}
             on_release:
                 root.manager.transition.dorection = "right"
+                root.clean_labels()
                 root.manager.current = "pat_edit_app"
         Button:
             text: "Logout"

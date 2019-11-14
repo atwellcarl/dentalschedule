@@ -10,6 +10,7 @@ from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
 
+import hashlib, binascii, os
 import db_control as db
 
 # This class allows a patient user to register an account
@@ -20,9 +21,10 @@ class RegisterAccountWindow(Screen):
     phone = ObjectProperty(None)
     email = ObjectProperty(None)
     password = ObjectProperty(None)
-    
+
     def reg_accout(self):
-        db.create_user(self.fr_name.text, self.lt_name.text, self.email.text, self.password.text,
+        passw = self.hash_password(self.password.text)
+        db.create_user(self.fr_name.text, self.lt_name.text, self.email.text, passw,
                         self.phone.text,"Not", "Patient")
         wm.screen_manager.current = "pat_login"
 
@@ -32,3 +34,10 @@ class RegisterAccountWindow(Screen):
         self.phone.text = ""
         self.email.text = ""
         self.password.text = ""
+    def hash_password(self, password):
+        """Hash a password for storing."""
+        salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
+        pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'),
+                                    salt, 100000)
+        pwdhash = binascii.hexlify(pwdhash)
+        return (salt + pwdhash).decode('ascii')
