@@ -52,18 +52,13 @@ class CalendarWindow(Screen):
     def patient_scheduled(self, j, i, day):
         # dr_id = db.get_pat_id(pwl.user_info[0])
         list = db.view_user_schedule(plw.user_info[0], "Patient")
-        # build a string of format "2019-10-30-11" "yr-mon-day-strTime"
+        # build a string of format "2019-10-30-11" "yr-mon-day-startTime"
         cur_app = ("{}-{}-{}-{}".format(self.year, self.month, day, j + 8))
         i = 0
         for app in list:
             pat_schedule = ("{}-{}".format(app[0], app[1]))
-            # print("{}: {}".format(i, cur_app))
-            # print("{}: {}".format(i, pat_schedule))
             i += 1
             if(pat_schedule == cur_app):
-                print("{}: {}".format(i, cur_app))
-                print("{}: {}".format(i, pat_schedule))
-                print("Conflict found, returning false")
                 return False
         return True
 

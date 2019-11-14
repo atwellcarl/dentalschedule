@@ -11,9 +11,9 @@
                 size: self.size
                 pos: self.pos
         Label:
-            text: "Description: "
-            size_hint: (.1, .15)
-            pos_hint: {"center_x": .25, "center_y": .85 }
+            text: "Appointment Description: "
+            size_hint: (.2, .15)
+            pos_hint: {"center_x": .20, "center_y": .85 }
             color: (0, 0, 0, 1)
             markup: True
             font_size: 20
@@ -22,13 +22,6 @@
             size_hint: (.3, .05)
             multiline: False
             pos_hint: {"center_x": .5, "center_y": .85 }
-        # Button:
-        #     id: choose_button
-        #     text: "Choose a doctor"
-        #     size_hint: (.25, .1)
-        #     pos_hint: {"center_x": .5, "center_y": .7 }
-        #     on_release:
-        #         root.choose_dr()
         Button:
             text: "Back >"
             size_hint: (.1, .05)

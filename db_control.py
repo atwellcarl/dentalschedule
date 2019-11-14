@@ -123,11 +123,9 @@ def view_user_schedule(user_id, user_type):
         # hygenist_query = """SELECT emp_fn, emp_ln
         #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
         #                      WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
-        # blah = c.execute(info_query)
-        # blah2 = c.execute(hygenist_query)
+
         appointment = []
         for row in c.execute(info_query):
-            # print(row)
             temp = "{} {}".format(row[0], row[1])
             appointment.append(row[0])
             appointment.append(row[1])
@@ -139,9 +137,6 @@ def view_user_schedule(user_id, user_type):
             appointment.append("Hygenist")
             ls.append(appointment)
             appointment = []
-        #     for app in appointment:
-        #         print(app)
-        # print(ls)
         for row in c.execute(hygenist_query):
             temp1 = "{} {}".format(row[0], row[1])
             for item in ls:
