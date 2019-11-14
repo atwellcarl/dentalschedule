@@ -1,11 +1,33 @@
 <PatientEditAppWindow>:
     name: "pat_edit_app"
-    FloatLayout:
-        canvas:
+	appointment: appointment
+	
+	on_enter: root.get_app()
+
+	FloatLayout:
+
+		canvas:
             Rectangle:
-                source: "Images/grad2.jpg"
+                source: 'Images/grad2.jpg'
                 size: self.size
                 pos: self.pos
+
+        Label:
+            id: appointment
+            text: "No Appointments"
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 14
+            pos_hint: {"center_x": .5, "center_y": .65 }
+        Label:
+            id: availableAppointments
+            text: "Appointments"
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 18
+            pos_hint: {"center_x": .5, "center_y": .85 }
         Button:
             text: "Back"
             size_hint: (.1, .05)
@@ -13,3 +35,4 @@
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "pat_home"
+				root.remove_buttons()

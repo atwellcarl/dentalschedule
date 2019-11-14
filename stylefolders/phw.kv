@@ -11,21 +11,6 @@
                 source: 'Images/grad2.jpg'
                 size: self.size
                 pos: self.pos
-#		ScrollView:
-#			do_scroll_x: False
-#			do_scroll_y: True
-#
-		#	Label:
-		#		id: appointment
-		#		size_hint: (.25, .1)
-		#		pos_hint: {"center_x": .1, "center_y": .2 }
-		#		size_hint_y: None
-		#		height: self.texture_size[0]
-		#		padding: 10, 10
-		#		color: (0, 0, 0, 1)
-		#		markup: True
-		#		font_size: 14
-
         Label:
             id: appointment
             text: "No Appointments"
@@ -34,12 +19,6 @@
             markup: True
             font_size: 14
             pos_hint: {"center_x": .5, "center_y": .65 }
-        #Button:
-            #text: "Reload Appointments"
-            #size_hint: (.25, .1)
-            #pos_hint: {"center_x": .5, "center_y": .5 }
-            #on_release:
-            #    root.get_app()
         Button:
             text: "Make An Appointment"
             size_hint: (.25, .1)
