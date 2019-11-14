@@ -31,11 +31,19 @@ class PatientHomeWindow(Screen):
         for item in labels:
             self.remove_widget(item)
 
+    def remove_labels(self):
+        for item in labels:
+            self.remove_widget(item)
+
     def get_app(self):
-        pos_x = .02
+        for item in labels:
+            self.remove_widget(item)
+            
+        pos_x = .035
         pos_y = .75
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
         if(len(schedule) != 0):
+            labels.clear()
             self.appointment.text = ""
             for app in schedule:
                 
@@ -43,15 +51,17 @@ class PatientHomeWindow(Screen):
                 line2 = "Time: {}".format(app[1])
                 line3 = "Description: {}".format(app[3])
                 line4 = "Dr: {} {}\nHygenist: {} {}".format(app[4], app[5], app[6], app[7])
-                line5 = "{}\n{}:00\n{}\n{}\n\n".format(line1, line2, line3, line4)
+                line5 = "{}\n{}:00\n{}\n{}\n".format(line1, line2, line3, line4)
                 
-                lbl = Label(text = line5, font_size=15, pos_hint = {"x": pos_x, "y": pos_y}, size_hint = (.225, .125), color=[255,255,255,1])
+                #lbl = Label(text = line5, font_size=14, pos_hint = {"x": pos_x, "y": pos_y}, size_hint = (.23, .125), color=[255,255,255,1])
+                lbl = Label(text = line5, font_size=14, size_hint = (.23, .125), color=[255,255,255,1])
+                lbl.pos_hint = {"x": pos_x, "y": pos_y}
                 labels.append(lbl)
                 
                 self.add_widget(lbl)
                 pos_y -= .185
                 
-                if ( (len(labels)) % 3 == 0):
+                if ( pos_y <= .3):
                     pos_x += .225
                     pos_y = .75
         else:
