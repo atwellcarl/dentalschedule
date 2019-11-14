@@ -1,3 +1,5 @@
+from kivy.config import Config
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -16,36 +18,49 @@ import time
 class PatientHomeWindow(Screen):
     kv = Builder.load_file("stylefolders/phw.kv")
     appointment = ObjectProperty(None)
+<<<<<<< HEAD
     time = time.localtime(time.time())
+=======
+    global labels
+    labels = []
+>>>>>>> b36a6118d442e6dd1e532dbd82ff9b23ee9d6ea7
 
     def logout(self):
         for info in plw.user_info:
             print (info)
         for info in plw.user_info:
             info = None
+        schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
+        #for app in schedule:
+            #self.remove_widget(lbl)
+        for item in labels:
+            self.remove_widget(item)
 
     def get_app(self):
+        pos_x = .02
+        pos_y = .75
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
         cur_time = ("{}{}{}{}".format(self.time.tm_year, self.time.tm_mon,
                     self.time.tm_mday, self.time.tm_hour))
         if(len(schedule) != 0):
             self.appointment.text = ""
             for app in schedule:
-                # run a check to see if app has passed
-                temp = app[0].split("-")
-                temp2 = app[1].split(":")
-                app_time = 0
-                if(int(temp2[0]) < 10):
-                    app_time = "{}{}{}{}0".format(temp[0], temp[1], temp[2], temp2[0])
-                else:
-                    app_time = "{}{}{}{}".format(temp[0], temp[1], temp[2], temp2[0])
 
-                if(int(app_time) >= int(cur_time)):
-                    line1 = "Date: {}".format(app[0])
-                    line2 = "Time: {}".format(app[1])
-                    line3 = "Description: {}".format(app[3])
-                    line4 = "With: Dr. {} {} and Hygenist {} {}".format(app[4], app[5], app[6], app[7])
-                    self.appointment.text += "{}\n {}:00\n {}\n {}\n\n".format(line1, line2, line3, line4)
+                line1 = "Date: {}".format(app[0])
+                line2 = "Time: {}".format(app[1])
+                line3 = "Description: {}".format(app[3])
+                line4 = "Dr: {} {}\nHygenist: {} {}".format(app[4], app[5], app[6], app[7])
+                line5 = "{}\n{}:00\n{}\n{}\n\n".format(line1, line2, line3, line4)
+                
+                lbl = Label(text = line5, font_size=15, pos_hint = {"x": pos_x, "y": pos_y}, size_hint = (.225, .125), color=[255,255,255,1])
+                labels.append(lbl)
+
+                self.add_widget(lbl)
+                pos_y -= .185
+
+                if ( (len(labels)) % 3 == 0):
+                    pos_x += .225
+                    pos_y = .75
         else:
             self.appointment.text = "No Appointments Scheduled"
 
