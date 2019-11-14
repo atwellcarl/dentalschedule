@@ -25,7 +25,7 @@ class PatientHomeWindow(Screen):
         for item in self.labels:
             self.remove_widget(item)
         self.labels = []
-        
+
     def logout(self):
         for info in plw.user_info:
             print (info)
@@ -34,15 +34,24 @@ class PatientHomeWindow(Screen):
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
         self.clean_labels()
 
+    def remove_labels(self):
+        for item in labels:
+            self.remove_widget(item)
+
     def get_app(self):
-        pos_x = .02
+        for item in labels:
+            self.remove_widget(item)
+
+        pos_x = .035
         pos_y = .75
         schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
         cur_time = ("{}{}{}{}".format(self.time.tm_year, self.time.tm_mon,
                     self.time.tm_mday, self.time.tm_hour))
         if(len(schedule) != 0):
+            labels.clear()
             self.appointment.text = ""
             for app in schedule:
+<<<<<<< HEAD
                 temp = app[0].split("-")
                 temp2 = app[1].split(":")
                 app_time = 0

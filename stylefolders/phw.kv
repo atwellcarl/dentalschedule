@@ -11,6 +11,16 @@
                 source: 'Images/grad2.jpg'
                 size: self.size
                 pos: self.pos
+		Label:
+            id: availableAppointments
+            text: "Appointments"
+			underline: True
+			bold: True
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 24
+            pos_hint: {"center_x": .5, "center_y": .925 }
         Label:
             id: appointment
             text: "No Appointments"
@@ -27,6 +37,7 @@
                 root.manager.transition.direction = "right"
                 root.clean_labels()
                 root.make_appointment()
+				root.remove_labels()
         Button:
             text: "Delete/Edit Appointment"
             size_hint: (.25, .1)
@@ -35,6 +46,7 @@
                 root.manager.transition.dorection = "right"
                 root.clean_labels()
                 root.manager.current = "pat_edit_app"
+				root.remove_labels()
         Button:
             text: "Logout"
             size_hint: (.1, .05)
