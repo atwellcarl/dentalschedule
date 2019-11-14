@@ -39,8 +39,8 @@ class CalendarWindow(Screen):
     c = calendar.TextCalendar(calendar.SUNDAY)
     p = c.monthdatescalendar(year, month)
 
-    def employee_scheduled(self, j, i, day):
-        dr_id = db.get_emp_id(maw.dr_info[0])
+    def employee_scheduled(self, j, i, day, emp):
+        dr_id = db.get_emp_id(emp)
         list = db.view_user_schedule(dr_id, "Employee")
         # build a string of format "2019-10-30-11" "yr-mon-day-strTime"
         cur_app = ("{}-{}-{}-{}".format(self.year, self.month, day, j + 8))
@@ -61,6 +61,8 @@ class CalendarWindow(Screen):
             # print("{}: {}".format(i, pat_schedule))
             i += 1
             if(pat_schedule == cur_app):
+                print("{}: {}".format(i, cur_app))
+                print("{}: {}".format(i, pat_schedule))
                 print("Conflict found, returning false")
                 return False
         return True
@@ -73,21 +75,24 @@ class CalendarWindow(Screen):
             return False
         if(self.time.tm_year == self.year):
             # if the day already passed
+            temp = True
             if(int(button_day) < self.time.tm_mday
             and self.month == self.time.tm_mon):
-                return False
+                temp = False
             elif(self.month < self.time.tm_mon
                  and self.year == self.time.tm_year):
-                return False
+                temp = False
             # if the hour has already passed on the current day
             elif(int(button_day) == self.time.tm_mday
                  and (j + 8) <= self.time.tm_hour):
-                    return False
-            elif(self.employee_scheduled(j, i, button_day) == False):
-                return False
+                temp = False
+            elif(self.employee_scheduled(j, i, button_day, maw.dr_info[0]) == False):
+                temp = False
+            elif(self.employee_scheduled(j, i, button_day, maw.dr_info[1]) == False):
+                temp = False
             elif(self.patient_scheduled(j, i, button_day) == False):
-                return False
-        return True
+                temp = False
+        return temp
 
     def pop_cal(self):
         pos_x = .15
@@ -103,7 +108,7 @@ class CalendarWindow(Screen):
             pos_x += .1
 
         pos_x = .15
-        for j in range(8):
+        for j in range(10):
             for i in range(7):
                 if(self.valid_time(j, i) == False):
                     # invalid time slots so painted red

@@ -33,6 +33,7 @@ class PatientHomeWindow(Screen):
                 line1 = "Date: {}".format(app[0])
                 line2 = "Time: {}".format(app[1])
                 line3 = "Description: {}".format(app[3])
+                # line4 = "With: Dr {} {}".format(app[4], app[5])
                 line4 = "With: Dr {} {} and Hygenist {} {}".format(app[4], app[5], app[6], app[7])
                 self.appointment.text += "{}\n {}:00\n {}\n {}\n\n".format(line1, line2, line3, line4)
                 # print()

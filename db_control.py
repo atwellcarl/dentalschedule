@@ -100,7 +100,14 @@ def get_emp_email(id_num):
 
     return email[0]
 
-
+def get_hygen(temp, query, appointment):
+    for row in query:
+        # print(tow)
+        temp1 = "{} {}".format(row[0], row[1])
+        if(temp == temp1):
+            print("MAtch")
+            appointment.append(row[4])
+            appointment.append(row[5])
 # Returns a list of output strings showing every appointment a user has in the database
 def view_user_schedule(user_id, user_type):
     ls = []
@@ -116,6 +123,8 @@ def view_user_schedule(user_id, user_type):
         # hygenist_query = """SELECT emp_fn, emp_ln
         #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
         #                      WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
+        # blah = c.execute(info_query)
+        # blah2 = c.execute(hygenist_query)
         appointment = []
         for row in c.execute(info_query):
             # print(row)
@@ -126,25 +135,20 @@ def view_user_schedule(user_id, user_type):
             appointment.append(row[3])
             appointment.append(row[4])
             appointment.append(row[5])
-            # ls.append(s)
-            for tow in c.execute(hygenist_query):
-                # print(tow)
-                temp1 = "{} {}".format(tow[0], tow[1])
-                if(temp == temp1):
-                    # print(temp1)
-                    # print(temp)
-                    appointment.append(tow[4])
-                    appointment.append(tow[5])
+            appointment.append("No")
+            appointment.append("Hygenist")
             ls.append(appointment)
             appointment = []
         #     for app in appointment:
         #         print(app)
         # print(ls)
-
-        #
-        # for row in c.execute(hygenist_query):
-        #     appointment.append(row[0])
-        #     appointment.append(row[1])
+        for row in c.execute(hygenist_query):
+            temp1 = "{} {}".format(row[0], row[1])
+            for item in ls:
+                temp = "{} {}".format(item[0], item[1])
+                if(temp == temp1):
+                    item[6] = row[4]
+                    item[7] = row[5]
 
     elif user_type == "Employee":
         info_query = """SELECT date, start_time, end_time, description, pat_fn, pat_ln

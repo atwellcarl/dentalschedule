@@ -11,6 +11,16 @@
                 size: self.size
                 pos: self.pos
         Button:
+            text: "Unavailable"
+            size_hint: (.1, .05)
+            pos_hint: {"x": .15, "y": .85}
+            color: (1, 0, 0, 1)
+        Button:
+            text: "Available"
+            size_hint: (.1, .05)
+            pos_hint: {"x": .15, "y": .90}
+            color: (0, 1, 0, 1)
+        Button:
             text: "Next"
             size_hint: (.1, .05)
             pos_hint: {"x": .75, "y": .75}
@@ -23,7 +33,7 @@
         Button:
             text: "< back"
             size_hint: (.1, .05)
-            pos_hint: {"center_x": 0.5, "y": .2}
+            pos_hint: {"center_x": 0.5, "y": .1}
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "pat_home"
