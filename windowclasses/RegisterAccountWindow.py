@@ -34,6 +34,7 @@ class RegisterAccountWindow(Screen):
         self.phone.text = ""
         self.email.text = ""
         self.password.text = ""
+        
     def hash_password(self, password):
         """Hash a password for storing."""
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')

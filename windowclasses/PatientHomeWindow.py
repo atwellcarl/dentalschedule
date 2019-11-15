@@ -35,11 +35,11 @@ class PatientHomeWindow(Screen):
         self.clean_labels()
 
     def remove_labels(self):
-        for item in labels:
+        for item in self.labels:
             self.remove_widget(item)
 
     def get_app(self):
-        for item in labels:
+        for item in self.labels:
             self.remove_widget(item)
 
         pos_x = .035
@@ -48,10 +48,8 @@ class PatientHomeWindow(Screen):
         cur_time = ("{}{}{}{}".format(self.time.tm_year, self.time.tm_mon,
                     self.time.tm_mday, self.time.tm_hour))
         if(len(schedule) != 0):
-            labels.clear()
             self.appointment.text = ""
             for app in schedule:
-<<<<<<< HEAD
                 temp = app[0].split("-")
                 temp2 = app[1].split(":")
                 app_time = 0

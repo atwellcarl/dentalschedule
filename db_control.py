@@ -271,17 +271,19 @@ def create_work(user_id, appt_id):
 
 
 def get_appt_id(row, user_id, user_type):
+    print("{} {} {}".format(row, user_id, user_type))
     if user_type == "Patient":
         appt_id_q = """SELECT appt_id
                         FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                        WHERE pat_id = {}}
-                        LIMIT 1 OFFSET {}}""".format(user_id, row)
+                        WHERE pat_id = {}
+                        LIMIT 1 OFFSET {}""".format(user_id, row)
         c.execute(appt_id_q)
-        if appt_id_q is None:
-            print("No id found")
+        apt_id = c.fetchone()
+        if apt_id[0] is None:
+            print("No pat id found")
             return None
 
-            return appt_id_q[0]
+        return apt_id[0]
 
     elif user_type == "Employee":
         appt_id_q = """SELECT appt_id
@@ -289,16 +291,18 @@ def get_appt_id(row, user_id, user_type):
                          WHERE emp_id = {}
                          LIMIT 1 OFFSET {}""".format(user_id, row)
         c.execute(appt_id_q)
-        if appt_id_q is None:
-            print("No id found")
+        apt_id = c.fetchone()
+        if apt_id[0] is None:
+            print("No emp id found")
             return None
 
-        return appt_id_q[0]
+        return apt_id[0]
 
 
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
     appt_id = get_appt_id(row, user_id, user_type)
+    print(appt_id)
 
     del_request = """DELETE FROM Requests
                         WHERE appt_id = {}""".format(appt_id)
