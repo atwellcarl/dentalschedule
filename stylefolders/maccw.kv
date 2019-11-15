@@ -13,8 +13,8 @@
             text: "Remove and view accounts"
 		Button:
             text: "< Back"
-            size_hint: (.1, .05)
-            pos_hint: {'center_x':.5, 'center_y':.1}
+            size_hint: (.15, .05)
+            pos_hint: {'top':1, 'left':1}
             on_release:
-                root.manager.transition.direction = "left"
+                root.manager.transition.direction = "right"
                 root.manager.current = "admin_action"
