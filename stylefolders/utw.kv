@@ -5,15 +5,15 @@
 
         canvas:
             Rectangle:
-                source: 'Images/Image3.jpg'
+                source: 'Images/grad2.jpg'
                 size: self.size
                 pos: self.pos
 
         Button:
             text: "Staff"
 			font_size: 16
-            size_hint: (.33, .1)
-            pos_hint: {"center_x": .5, "top": .70}
+            size_hint: (.25, .1)
+            pos_hint: {"center_x": .7, "center_y": .2}
             on_release:
                 root.manager.transition.direction = "left"
                 root.staff()
@@ -21,8 +21,16 @@
         Button:
             text: "Patient"
 			font_size: 16
-            size_hint: (.33, .1)
-            pos_hint: {"center_x": .5, "top": .30}
+            size_hint: (.25, .1)
+            pos_hint: {"center_x": .3, "center_y": .2}
             on_release:
-                root.manager.transition.direction = "right"
+                root.manager.transition.direction = "left"
                 root.patient()
+
+        Image:
+            source: 'Images/MyDental.png'
+            keep_ration: False
+            allow_stretch: True
+            opacity: 0.9
+            size_hint: (.6, .6)
+            pos_hint: {"center_x": .5, "center_y": .6}

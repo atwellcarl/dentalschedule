@@ -3,7 +3,7 @@
 
 	canvas:
         Rectangle:
-            source: 'Images/grad1.jpg'
+            source: 'Images/grad2.jpg'
             size: self.size
             pos: self.pos
 
@@ -11,7 +11,7 @@
         text: "Admin Login"
 		font_size: 16
         size_hint: (.33, .1)
-        pos_hint: {"center_x": .5, "top": .766666}
+        pos_hint: {"center_x": .7, "center_y": .65}
         on_release:
             root.manager.transition.direction = "left"
             root.admin()
@@ -19,7 +19,7 @@
         text: "Doctor Login"
 		font_size: 16
         size_hint: (.33, .1)
-        pos_hint: {"center_x": .5, "center_y": .5}
+        pos_hint: {"center_x": .7, "center_y": .5}
         on_release:
             root.manager.transition.direction = "left"
             root.doctor()
@@ -27,14 +27,21 @@
         text: "Hygenist Login"
 		font_size: 16
         size_hint: (.33, .1)
-        pos_hint: {"center_x": .5, "top": .333333}
+        pos_hint: {"center_x": .7, "center_y": .35}
         on_release:
             root.manager.transition.direction = "left"
             root.hygenist()
     Button:
         text: "< Back"
-        size_hint: (.1, .05)
-        pos_hint: {"center_x": .5, "top": .1}
+        size_hint: (.15, .05)
+        pos_hint: {"top": 1, "left": 1}
         on_release:
             root.manager.transition.direction = "right"
             root.manager.current = "user"
+    Image:
+        source: 'Images/MyDental.png'
+        keep_ration: False
+        allow_stretch: True
+        opacity: 0.9
+        size_hint: (.47, .47)
+        pos_hint: {"center_x": .3, "center_y": .5}

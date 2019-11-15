@@ -49,8 +49,8 @@
 				root.remove_labels()
         Button:
             text: "Logout"
-            size_hint: (.1, .05)
-            pos_hint: {'x':.9, 'y':.91}
+            size_hint: (.15, .05)
+            pos_hint: {'top':1, 'right':1}
             on_release:
                 root.logout()
                 root.manager.transition.direction = "left"

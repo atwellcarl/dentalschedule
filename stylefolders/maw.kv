@@ -23,9 +23,9 @@
             multiline: False
             pos_hint: {"center_x": .5, "center_y": .85 }
         Button:
-            text: "Back >"
-            size_hint: (.1, .05)
-            pos_hint: {'x':.9, 'y':.91}
+            text: "< Back"
+            size_hint: (.15, .05)
+            pos_hint: {'top':1, 'left':1}
             on_release:
-                root.manager.transition.direction = "left"
+                root.manager.transition.direction = "right"
                 root.manager.current = "pat_home"

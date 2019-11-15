@@ -7,7 +7,7 @@
     FloatLayout:
         canvas:
             Rectangle:
-                source: 'Images/grad1.jpg'
+                source: 'Images/grad2.jpg'
                 size: self.size
                 pos: self.pos
         Label:
@@ -36,17 +36,24 @@
             size_hint: (.3, .05)
             pos_hint: {'center_x': .5, 'y': .425}
         Button:
-            text: "Enter"
+            text: "Login"
             size_hint: (.25, .10)
-            pos_hint: {'center_x':.5, 'center_y':.25}
+            pos_hint: {'center_x':.5, 'center_y':.33}
             on_release:
                 root.manager.transition.direction = "left"
                 root.login()
         Button:
             text: "< Back"
-            size_hint: (.1, .05)
-            pos_hint: {'center_x':.5, 'center_y':.1}
+            size_hint: (.15, .05)
+            pos_hint: {'top':1, 'left':1}
             on_release:
                 root.reset_inputs()
                 root.manager.transition.direction = "right"
                 root.manager.current = "staff_type"
+        Image:
+            source: 'Images/MyDental.png'
+            keep_ration: False
+            allow_stretch: True
+            opacity: 0.9
+            size_hint: (.35, .35)
+            pos_hint: {"center_x": .5, "center_y": .8}
