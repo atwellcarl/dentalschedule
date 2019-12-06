@@ -1,5 +1,6 @@
 <ManageAccountsWindow>:
     name: "manage_accounts"
+    email: email
 
 	canvas:
 		Rectangle:
@@ -10,7 +11,32 @@
 
     FloatLayout:
         Label:
-            text: "Remove and view accounts"
+            text: "Remove and view accounts (patient or employee)"
+            pos_hint: {"center_x": 0.5, "center_y": 0.85}
+        Label:
+            text: "User Email: "
+            size_hint: (.2, .15)
+            pos_hint: {"center_x": .25, "center_y": .65 }
+            color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: email
+            size_hint: (.3, .05)
+            multiline: False
+            pos_hint: {"center_x": .5, "center_y": .65 }
+        Button:
+            text: "Activate"
+            size_hint: (.2, .1)
+            pos_hint: {"center_x":.333, "y": .3}
+            on_release:
+                root.reactivate()
+        Button:
+            text: "Deactivate"
+            size_hint: (.2, .1)
+            pos_hint: {"center_x":.666, "y": .3}
+            on_release:
+                root.deactivate()
 		Button:
             text: "< Back"
             size_hint: (.15, .05)

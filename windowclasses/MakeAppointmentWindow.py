@@ -14,6 +14,7 @@ from windowclasses import PatientLoginWindow as plw
 import db_control as db
 
 dr_info = [None] * 4
+# This class handles the logic for the make appointment window
 class MakeAppointmentWindow(Screen):
     kv = Builder.load_file("stylefolders/maw.kv")
     description = ObjectProperty(None)
@@ -23,17 +24,18 @@ class MakeAppointmentWindow(Screen):
     dr_button = []
     hygen_button = []
 
+    # Changes the choose button text
     def no_func(self, button_text):
         # self.remove_widget(self.choose_button)
         self.button = Button(text = button_text, size_hint = (.25, .1),
                         pos_hint = {"center_x": .5, "center_y": .7})
         self.add_widget(self.button)
 
+    # populates the page with buttons coreesponding to drs
     def choose_dr(self):
         button = Button(text = "Choose a Doctor", size_hint = (.25, .1),
                         pos_hint = {"center_x": .5, "center_y": .7})
         self.add_widget(button)
-        # self.button.bind(on_release = self.choose_dr())
         if(self.list_filled == False):
             emp_list = db.list_employees()
             for employee in emp_list:
@@ -49,9 +51,7 @@ class MakeAppointmentWindow(Screen):
             self.dr_button.append(self.b)
             y_pos -= .1
 
-        # self.no_func("Choose a Doctor")
-        # self.choose_button.bind(on_release = self.no_func)
-
+    # populates the page with buttons corresponding to hygienists
     def choose_hygen(self):
         emp_list = db.list_employees()
         for employee in emp_list:
@@ -67,12 +67,13 @@ class MakeAppointmentWindow(Screen):
             y_pos -= .1
         self.list_filled = False
 
+    # The doctor has been choosen so save the email and prompt
+    # for a hygienists
     def dr_pressed(self, instance):
         for doctor in self.dr_list:
             dr = "{} {}".format(doctor[1], doctor[2])
             if(instance.text == dr):
                 dr_info[0] = doctor[3]
-        # self.choose_button.text = "Choose A Hygenist"
         self.dr_list = []
         for button in self.dr_button:
             self.remove_widget(button)

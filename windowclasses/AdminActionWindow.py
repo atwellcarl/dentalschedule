@@ -12,16 +12,20 @@ from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
 from windowclasses import AdminLoginWindow as alw
 
-# Inquires about what actions the Admin
+# Inquires about what administrative actions the Admin
 # would like to perform
 class AdminActionWindow(Screen):
     kv = Builder.load_file("stylefolders/aaw.kv")
+
     def create_staff(self):
         wm.screen_manager.current = "create_staff"
+
     def setup_calendar(self):
         wm.screen_manager.current = "setup_calendar"
+
     def manage_accounts(self):
         wm.screen_manager.current = "manage_accounts"
+
     def logout(self):
         for info in alw.user_info:
             print (info)

@@ -1,0 +1,101 @@
+<StaffScheduleAppWindow>:
+    name: "staff_sched_app"
+	# appointment: appointment
+    dr_email: dr_email
+    hy_email: hy_email
+    pat_email: pat_email
+    descrp: descrp
+
+	FloatLayout:
+
+		canvas:
+            Rectangle:
+                source: 'Images/grad2.jpg'
+                size: self.size
+                pos: self.pos
+
+        Label:
+            text: "To schedule an appointment please fill out all data fields"
+            size_hint: (.25, .15)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 14
+            pos_hint: {"center_x": .5, "center_y": .85 }
+
+        Label:
+            id: availableAppointments
+            text: "Make Appointment"
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 24
+			bold: True
+            underline: True
+            pos_hint: {"center_x": .5, "center_y": .90 }
+        Label:
+            text: "Doctor Email:"
+            size_hint: (.22, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 18
+			bold: True
+            pos_hint: {"x": .0, "center_y": .725 }
+        TextInput:
+            id: dr_email
+            multiline: False
+            size_hint: (.2, .05)
+            pos_hint: {'center_x': .29, 'y': .70}
+        Label:
+            text: "Hygenist Email:"
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 18
+			bold: True
+            pos_hint: {"x": .4, "center_y": .725 }
+        TextInput:
+            id: hy_email
+            multiline: False
+            size_hint: (.2, .05)
+            pos_hint: {'center_x': .71, 'y': .70}
+        Label:
+            text: "Patient Email:"
+            size_hint: (.2, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 18
+			bold: True
+            pos_hint: {"x": .0, "center_y": .625}
+        TextInput:
+            id: pat_email
+            multiline: False
+            size_hint: (.2, .05)
+            pos_hint: {'center_x': .29, 'y': .60}
+        Label:
+            text: "Description:"
+            size_hint: (.25, .1)
+			color: (0, 0, 0, 1)
+            markup: True
+            font_size: 18
+			bold: True
+            pos_hint: {"x": .4, "center_y": .625 }
+        TextInput:
+            id: descrp
+            multiline: False
+            size_hint: (.2, .05)
+            pos_hint: {'center_x': .71, 'y': .60}
+        Button:
+            id: enter
+            text: "Enter"
+            size_hint: (.3, .1)
+            pos_hint: {"center_x": .5, "center_y": .4}
+            on_release:
+                root.get_input()
+
+        Button:
+            text: "Back >"
+            size_hint: (.1, .05)
+            pos_hint: {'top':1, 'right':1}
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "st_home"

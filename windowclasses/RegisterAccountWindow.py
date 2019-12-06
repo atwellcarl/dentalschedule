@@ -24,9 +24,23 @@ class RegisterAccountWindow(Screen):
 
     def reg_accout(self):
         passw = self.hash_password(self.password.text)
-        db.create_user(self.fr_name.text, self.lt_name.text, self.email.text, passw,
+
+        if(self.email.text.find("@") == -1):
+            self.pop_error("Invalid Email")
+            print("invalid email")
+        elif(len(self.phone.text) < 10 or len(self.phone.text) > 10):
+            self.pop_error("Invalid Phone Number")
+            print("invalid Phone")
+        else:
+            db.create_user(self.fr_name.text, self.lt_name.text, self.email.text, passw,
                         self.phone.text,"Not", "Patient")
-        wm.screen_manager.current = "pat_login"
+            wm.screen_manager.current = "pat_login"
+            
+    def pop_error(self, message):
+        popup = Popup(title = "Bad Data",
+                      content = Label(text = message),
+                      size_hint = (None, None), size = (400, 400))
+        popup.open()
 
     def reset_inputs(self):
         self.fr_name.text = ""
@@ -34,7 +48,7 @@ class RegisterAccountWindow(Screen):
         self.phone.text = ""
         self.email.text = ""
         self.password.text = ""
-        
+
     def hash_password(self, password):
         """Hash a password for storing."""
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')

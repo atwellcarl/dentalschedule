@@ -28,6 +28,8 @@ from windowclasses import StaffUserType as sut
 from windowclasses import UserTypeWindow as utw
 from windowclasses import PatientEditAppWindow as peaw
 from windowclasses import PatientPostDeleteWindow as ppdw
+from windowclasses import StaffEditAppWindow as seaw
+from windowclasses import StaffScheduleAppWindow as ssaw
 
 user_info = [None] * 4
 dr_info = [None] * 4
@@ -53,6 +55,8 @@ wm.windows.append(cw.CalendarWindow(name = "calendar"))
 wm.windows.append(shw.StaffHomeWindow(name = "st_home"))
 wm.windows.append(peaw.PatientEditAppWindow(name = "pat_edit_app"))
 wm.windows.append(ppdw.PatientPostDeleteWindow(name = "pat_post_del"))
+wm.windows.append(seaw.StaffEditAppWindow(name = "staff_edit_app"))
+wm.windows.append(ssaw.StaffScheduleAppWindow(name = "staff_sched_app"))
 
 for window in wm.windows:
     screen_manager.add_widget(window)

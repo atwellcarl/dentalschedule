@@ -12,30 +12,39 @@ from windowclasses import WindowManager as wm
 import db_control as db
 
 user_info = [None] * 4
+
 # A window for the admin to login
 class AdminLoginWindow(Screen):
     kv = Builder.load_file("stylefolders/alw.kv")
     password = ObjectProperty(None)
     email = ObjectProperty(None)
 
+    # Method handles login logic
     def login(self):
-
+        # retrieve user entered data
         passw = self.password.text
         em = self.email.text
+
+        # check if the credentials are correct
         if(db.is_user(em, passw, "Admin")):
             user_info[0] = db.get_emp_id(em)
             user_info[1] = "Admin"
             user_info[2] = em
             wm.screen_manager.current = "admin_action"
+
+        # inform user that password or email was incorrect
         else:
             self.invalid_admin_login()
 
+    # Pop up window to provide user with a message in
+    # case of a failed login
     def invalid_admin_login(self):
         popup = Popup(title = "Login Failed",
                       content = Label(text = "Invalid email or passowrd."),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
 
+    # Set login text boxes to empty strings
     def reset_inputs(self):
         self.password.text = ""
         self.email.text = ""

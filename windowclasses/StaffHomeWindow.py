@@ -12,7 +12,6 @@ from windowclasses import StaffLoginWindow as slw
 import db_control as db
 import time
 
-
 class StaffHomeWindow(Screen):
     kv = Builder.load_file("stylefolders/shw.kv")
     appointment = ObjectProperty(None)

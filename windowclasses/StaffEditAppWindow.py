@@ -9,21 +9,19 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
-from kivy.uix.label import Label
-from windowclasses import PatientLoginWindow as plw
-
+from windowclasses import StaffLoginWindow as slw
 import db_control as db
 
-class PatientEditAppWindow(Screen):
-    kv = Builder.load_file("stylefolders/peaw.kv")
+class StaffEditAppWindow(Screen):
+    kv = Builder.load_file("stylefolders/seaw.kv")
     appointment = ObjectProperty(None)
-    # global buttons
+    global buttons
     buttons = []
 
     def get_app(self):
         pos_x = .15
         pos_y = .65
-        schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
+        schedule = db.view_user_schedule(int(slw.user_info[0]), "Employee")
         row = 0
         if(len(schedule) != 0):
             self.appointment.text = ""
@@ -33,7 +31,7 @@ class PatientEditAppWindow(Screen):
                     pos_hint = {"x": pos_x, "y": pos_y})
                 self.button.bind(on_release = self.delete_app)
                 self.add_widget(self.button)
-                self.buttons.append(self.button)
+                buttons.append(self.button)
                 pos_y -= .15
                 row += 1
 
@@ -44,15 +42,14 @@ class PatientEditAppWindow(Screen):
             self.appointment.text = "No Appointments Scheduled"
 
     def remove_buttons(self):
-        for item in self.buttons:
-            print(item.text)
+        for item in buttons:
             self.remove_widget(item)
 
     def delete_app(self, instance):
-        print("{} {} {}".format(int(instance.id), plw.user_info[0], "Patient"))
-        db.delete_appt(int(instance.id), plw.user_info[0], "Patient")
+        print("{} {} {}".format(int(instance.id), slw.user_info[0], "Employee"))
+        db.delete_appt(int(instance.id), slw.user_info[0], "Employee")
         self.pop("The appointment you selected has been deleted.")
-        wm.screen_manager.current = "pat_post_del"
+        wm.screen_manager.current = "st_home"
 
     def pop(self, message):
         popup = Popup(title = "Appointment Deleted",
