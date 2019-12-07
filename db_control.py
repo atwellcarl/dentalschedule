@@ -54,11 +54,13 @@ def is_user(email, password, usr_type):
             return verify_password(output[0], password)
             # if output[0] == password:
             #     return True
+
     return False
+
 
 # Returns a patients ID given their email as the only parameter
 def get_pat_id(email):
-    id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "{}" """.format(email)
+    id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "%{}%" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
 
@@ -72,7 +74,7 @@ def get_pat_id(email):
 
 # Returns an employees ID given their email as the only parameter
 def get_emp_id(email):
-    id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "{}" """.format(email)
+    id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "%{}%" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
 
@@ -130,7 +132,7 @@ def view_user_schedule(user_id, user_type):
 
         hygenist_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                            WHERE pat_id == {} AND emp_type LIKE "%Hygienist%" """.format(user_id)
+                            WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
 
         # hygenist_query = """SELECT emp_fn, emp_ln
         #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
@@ -146,7 +148,7 @@ def view_user_schedule(user_id, user_type):
             appointment.append(row[4])
             appointment.append(row[5])
             appointment.append("No")
-            appointment.append("Hygienist")
+            appointment.append("Hygenist")
             ls.append(appointment)
             appointment = []
         for row in c.execute(hygenist_query):
@@ -294,6 +296,7 @@ def get_appt_id(row, user_id, user_type):
 
         return appt_id_q[0]
 
+
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
     appt_id = get_appt_id(row, user_id, user_type)
@@ -313,7 +316,7 @@ def delete_appt(row, user_id, user_type):
     c.execute(del_appt)
 
     commit()
-    
+
     
 def delete_user(usr_type, usr_id):
     update_stmt = ""
@@ -370,8 +373,24 @@ def has_notification(usr_type, usr_id):
 
     c.execute(notification_q)
     if notification_q[0] == 1:
+        remove_notification(usr_type, usr_id)
         return 1
     else:
         return 0
 
+
+def remove_notification(usr_type, usr_id):
+    remove_q = ""
+    if usr_type == "Employee":
+        remove_q = """UPDATE Employee
+                        SET emp_notification = 0
+                        WHERE emp_id = {}""".format(usr_id)
+        
+    elif usr_type == "Patient":
+        remove_q = """UPDATE Patient
+                        SET pat_notification = 0
+                        WHERE pat_id = {}""".format(usr_id)
+
+    c.execute(remove_q)
+    commit()
 
