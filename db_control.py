@@ -313,8 +313,8 @@ def delete_appt(row, user_id, user_type):
     c.execute(del_appt)
 
     commit()
-
-
+    
+    
 def delete_user(usr_type, usr_id):
     update_stmt = ""
     if usr_type == "Employee":
@@ -327,38 +327,28 @@ def delete_user(usr_type, usr_id):
                             SET pat_valid = 1
                             WHERE pat_id = {}""".format(usr_id)
 
-    c.execute(update_stmt)
-    commit()
-
+        c.execute(update_stmt)
+        commit()
+        
 
 def set_notification(appt_id):
-    pat_notify_id = """SELECT pat_id
-                        FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
-                        WHERE appt_id = {}""".format(appt_id)
-
-    dr_notify_id = """SELECT emp_id
-                            FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                            WHERE appt_id = {} AND emp_type = "Doctor" """.format(appt_id)
-
-    hyg_notify_id = """SELECT emp_id
-                            FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                            WHERE appt_id = {} AND emp_type = "Hygenist" """.format(appt_id)
-
-    c.execute(pat_notify_id)
-    c.execute(dr_notify_id)
-    c.execute(hyg_notify_id)
-
     pat_update = """UPDATE Patient
                         SET pat_notification = 1
-                        WHERE pat_id = {}""".format(pat_notify_id[0])
+                        WHERE pat_id = (SELECT pat_id
+                            FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
+                            WHERE appt_id = {})""".format(appt_id)
 
-    dr_update = """UPDATE Patient
+    dr_update = """UPDATE Employee
                             SET emp_notification = 1
-                            WHERE emp_id = {}""".format(hyg_notify_id[0])
+                            WHERE emp_id = (SELECT emp_id
+                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                                WHERE appt_id = {} AND emp_type = "Doctor")""".format(appt_id)
 
-    hyg_update = """UPDATE Patient
+    hyg_update = """UPDATE Employee
                             SET emp_notification = 1
-                            WHERE emp_id = {}""".format(dr_notify_id[0])
+                            WHERE emp_id = (SELECT emp_id
+                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                                WHERE appt_id = {} AND emp_type = "Hygenist")""".format(appt_id)
 
     c.execute(pat_update)
     c.execute(dr_update)
@@ -369,12 +359,12 @@ def set_notification(appt_id):
 def has_notification(usr_type, usr_id):
     notification_q = ""
     if usr_type == "Employeee":
-        notification_q = """SELECT emp_id
+        notification_q = """SELECT emp_notification
                                 FROM Employee
                                 WHERE emp_id = {}""".format(usr_id)
 
     elif usr_type == "Patient":
-        notification_q = """SELECT pat_id
+        notification_q = """SELECT pat_notification
                                 FROM Patient
                                 WHERE pat_id = {}""".format(usr_id)
 
@@ -383,3 +373,5 @@ def has_notification(usr_type, usr_id):
         return 1
     else:
         return 0
+
+
