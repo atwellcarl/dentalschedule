@@ -121,6 +121,7 @@ def get_hygen(temp, query, appointment):
             print("MAtch")
             appointment.append(row[4])
             appointment.append(row[5])
+
 # Returns a list of output strings showing every appointment a user has in the database
 def view_user_schedule(user_id, user_type):
     ls = []
@@ -271,19 +272,17 @@ def create_work(user_id, appt_id):
 
 
 def get_appt_id(row, user_id, user_type):
-    print("{} {} {}".format(row, user_id, user_type))
     if user_type == "Patient":
         appt_id_q = """SELECT appt_id
                         FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
                         WHERE pat_id = {}
                         LIMIT 1 OFFSET {}""".format(user_id, row)
         c.execute(appt_id_q)
-        apt_id = c.fetchone()
-        if apt_id[0] is None:
-            print("No pat id found")
+        if appt_id_q is None:
+            print("No id found")
             return None
 
-        return apt_id[0]
+            return appt_id_q[0]
 
     elif user_type == "Employee":
         appt_id_q = """SELECT appt_id
@@ -291,18 +290,17 @@ def get_appt_id(row, user_id, user_type):
                          WHERE emp_id = {}
                          LIMIT 1 OFFSET {}""".format(user_id, row)
         c.execute(appt_id_q)
-        apt_id = c.fetchone()
-        if apt_id[0] is None:
-            print("No emp id found")
+        if appt_id_q is None:
+            print("No id found")
             return None
 
-        return apt_id[0]
+        return appt_id_q[0]
 
 
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
     appt_id = get_appt_id(row, user_id, user_type)
-    print(appt_id)
+    set_notification(appt_id)
 
     del_request = """DELETE FROM Requests
                         WHERE appt_id = {}""".format(appt_id)
@@ -318,3 +316,73 @@ def delete_appt(row, user_id, user_type):
     c.execute(del_appt)
 
     commit()
+
+
+def delete_user(usr_type, usr_id):
+    update_stmt = ""
+    if usr_type == "Employee":
+        update_stmt = """UPDATE Employee
+                        SET emp_valid = 1
+                        WHERE emp_id = {}""".format(usr_id)
+
+    elif usr_type == "Patient":
+        update_stmt = """UPDATE Patient
+                            SET pat_valid = 1
+                            WHERE pat_id = {}""".format(usr_id)
+
+        c.execute(update_stmt)
+        commit()
+        
+
+def set_notification(appt_id):
+    pat_notify_id = """SELECT pat_id
+                        FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
+                        WHERE appt_id = {}""".format(appt_id)
+
+    dr_notify_id = """SELECT emp_id
+                            FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                            WHERE appt_id = {} AND emp_type = "Doctor" """.format(appt_id)
+
+    hyg_notify_id = """SELECT emp_id
+                            FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                            WHERE appt_id = {} AND emp_type = "Hygenist" """.format(appt_id)
+
+    c.execute(pat_notify_id)
+    c.execute(dr_notify_id)
+    c.execute(hyg_notify_id)
+
+    pat_update = """UPDATE Patient
+                        SET pat_notification = 1
+                        WHERE pat_id = {}""".format(pat_notify_id[0])
+
+    dr_update = """UPDATE Patient
+                            SET emp_notification = 1
+                            WHERE emp_id = {}""".format(hyg_notify_id[0])
+
+    hyg_update = """UPDATE Patient
+                            SET emp_notification = 1
+                            WHERE emp_id = {}""".format(dr_notify_id[0])
+
+    c.execute(pat_update)
+    c.execute(dr_update)
+    c.execute(hyg_update)
+    commit()
+
+
+def has_notification(usr_type, usr_id):
+    notification_q = ""
+    if usr_type == "Employeee":
+        notification_q = """SELECT emp_id
+                                FROM Employee
+                                WHERE emp_id = {}""".format(usr_id)
+
+    elif usr_type == "Patient":
+        notification_q = """SELECT pat_id
+                                FROM Patient
+                                WHERE pat_id = {}""".format(usr_id)
+
+    c.execute(notification_q)
+    if notification_q[0] == 1:
+        return 1
+    else:
+        return 0
