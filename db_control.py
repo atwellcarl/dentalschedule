@@ -14,6 +14,21 @@ def commit():
 def close():
     con.close()
 
+def is_valid(email, usr_type):
+    valid_bit = ""
+    if usr_type == "Patient":
+        valid_bit = """SELECT pat_valid
+                        FROM Patient
+                        WHERE pat_email LIKE "{}" """.format(email)
+
+    elif usr_type == "Employee":
+        valid_bit = """SELECT pat_valid
+                                FROM Patient
+                                WHERE pat_email LIKE "{}" """.format(email)
+    c.execute(valid_bit)
+    return valid_bit[0] == 1
+
+
 def verify_password(stored_password, provided_password):
     """Verify a stored password against one provided by user"""
     salt = stored_password[:64]
@@ -36,22 +51,22 @@ def is_user(email, password, usr_type):
     elif usr_type == "Patient":
         valid_query = """SELECT pat_password
                               FROM Patient
-                              WHERE pat_email LIKE "%{}%" """.format(email)
+                              WHERE pat_email LIKE "{}" """.format(email)
         c.execute(valid_query)
         output = c.fetchone()
         if output is not None:
-            return verify_password(output[0], password)
+            return verify_password(output[0], password) and is_valid(email, usr_type)
             # if output[0] == password:
             #     return True
 
     elif usr_type == "Employee":
         valid_query = """SELECT emp_password
                               FROM Employee
-                              WHERE emp_email LIKE "%{}%" """.format(email)
+                              WHERE emp_email LIKE "{}" """.format(email)
         c.execute(valid_query)
         output = c.fetchone()
         if output is not None:
-            return verify_password(output[0], password)
+            return verify_password(output[0], password) and is_valid(email, usr_type)
             # if output[0] == password:
             #     return True
 
@@ -60,7 +75,7 @@ def is_user(email, password, usr_type):
 
 # Returns a patients ID given their email as the only parameter
 def get_pat_id(email):
-    id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "%{}%" """.format(email)
+    id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "{}" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
 
@@ -74,7 +89,7 @@ def get_pat_id(email):
 
 # Returns an employees ID given their email as the only parameter
 def get_emp_id(email):
-    id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "%{}%" """.format(email)
+    id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "{}" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
 
@@ -88,7 +103,7 @@ def get_emp_id(email):
 
 # Returns a patients email, given their ID
 def get_pat_email(id_num):
-    email_query = """SELECT pat_email FROM Patient WHERE pat_id LIKE "%{}%" """.format(id_num)
+    email_query = """SELECT pat_email FROM Patient WHERE pat_id LIKE "{}" """.format(id_num)
     c.execute(email_query)
     email = c.fetchone()
 
@@ -102,7 +117,7 @@ def get_pat_email(id_num):
 
 # Returns an employees email, given their ID
 def get_emp_email(id_num):
-    email_query = """SELECT emp_email FROM Employee WHERE emp_id LIKE "%{}%" """.format(id_num)
+    email_query = """SELECT emp_email FROM Employee WHERE emp_id LIKE "{}" """.format(id_num)
     c.execute(email_query)
     email = c.fetchone()
 
@@ -317,7 +332,7 @@ def delete_appt(row, user_id, user_type):
 
     commit()
 
-    
+
 def delete_user(usr_type, usr_id):
     update_stmt = ""
     if usr_type == "Employee":
@@ -385,7 +400,7 @@ def remove_notification(usr_type, usr_id):
         remove_q = """UPDATE Employee
                         SET emp_notification = 0
                         WHERE emp_id = {}""".format(usr_id)
-        
+
     elif usr_type == "Patient":
         remove_q = """UPDATE Patient
                         SET pat_notification = 0
@@ -393,4 +408,5 @@ def remove_notification(usr_type, usr_id):
 
     c.execute(remove_q)
     commit()
+
 
