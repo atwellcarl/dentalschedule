@@ -13,6 +13,8 @@ from windowclasses import PatientLoginWindow as plw
 from windowclasses import MakeAppointmentWindow as maw
 from windowclasses import WindowManager as wm
 from windowclasses import CalendarWindow as calendar
+from windowclasses import Help as help
+
 
 import db_control as db
 
@@ -51,3 +53,12 @@ class StaffScheduleAppWindow(Screen):
                       content = Label(text = message),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
+
+    def find_help(self):
+        help.prev_window = "staff_sched_app"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

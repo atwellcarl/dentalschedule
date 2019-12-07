@@ -9,8 +9,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 
-from windowclasses import WindowManager as mw
+from windowclasses import WindowManager as wm
 from windowclasses import PatientLoginWindow as plw
+from windowclasses import Help as help
+
 import db_control as db
 import time
 
@@ -61,7 +63,7 @@ class PatientHomeWindow(Screen):
                     line1 = "Date: {}".format(app[0])
                     line2 = "Time: {}".format(app[1])
                     line3 = "Description: {}".format(app[3])
-                    line4 = "Dr: {} {}\nHygenist: {} {}".format(app[4], app[5], app[6], app[7])
+                    line4 = "Dr: {} {}\nHygienist: {} {}".format(app[4], app[5], app[6], app[7])
                     line5 = "{}\n{}:00\n{}\n{}\n\n".format(line1, line2, line3, line4)
 
                     lbl = Label(text = line5, font_size=15, pos_hint = {"x": pos_x, "y": pos_y}, size_hint = (.225, .125), color=[255,255,255,1])
@@ -76,4 +78,13 @@ class PatientHomeWindow(Screen):
             self.appointment.text = "No Appointments Scheduled"
 
     def make_appointment(self):
-        mw.screen_manager.current = "make_appointment"
+        wm.screen_manager.current = "make_appointment"
+
+    def find_help(self):
+        help.prev_window = "pat_home"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

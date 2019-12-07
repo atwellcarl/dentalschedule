@@ -9,8 +9,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 
-from windowclasses import WindowManager as mw
+from windowclasses import WindowManager as wm
 from windowclasses import PatientLoginWindow as plw
+from windowclasses import Help as help
+
 import db_control as db
 
 dr_info = [None] * 4
@@ -30,6 +32,12 @@ class MakeAppointmentWindow(Screen):
         self.button = Button(text = button_text, size_hint = (.25, .1),
                         pos_hint = {"center_x": .5, "center_y": .7})
         self.add_widget(self.button)
+
+    def remove_buttons(self):
+        for button in self.dr_button:
+            self.remove_widget(button)
+        for button in self.hygen_button:
+            self.remove_widget(button)
 
     # populates the page with buttons coreesponding to drs
     def choose_dr(self):
@@ -75,8 +83,7 @@ class MakeAppointmentWindow(Screen):
             if(instance.text == dr):
                 dr_info[0] = doctor[3]
         self.dr_list = []
-        for button in self.dr_button:
-            self.remove_widget(button)
+        self.remove_buttons()
         self.no_func("Choose a hygienist")
         self.choose_hygen()
 
@@ -85,11 +92,17 @@ class MakeAppointmentWindow(Screen):
             dr = "{} {}".format(doctor[1], doctor[2])
             if(instance.text == dr):
                 dr_info[1] = doctor[3]
-        for button in self.hygen_button:
-            self.remove_widget(button)
-        # self.no_func("Choose a Doctor")
+        self.remove_buttons()
         self.dr_list = []
-        # self.choose_dr()
         plw.user_info[3] = self.description.text
-        mw.screen_manager.current = "calendar"
+        wm.screen_manager.current = "calendar"
         self.description.text = ""
+
+    def find_help(self):
+        help.prev_window = "make_appointment"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

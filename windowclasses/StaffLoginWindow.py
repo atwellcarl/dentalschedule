@@ -9,6 +9,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
+from windowclasses import Help as help
+
 import db_control as db
 
 user_info = [None] * 4
@@ -39,7 +41,7 @@ class StaffLoginWindow(Screen):
                       content = Label(text = "Invalid email or passowrd."),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
-        
+
     # def logout(self):
     #     for info in user_info:
     #         print (info)
@@ -48,3 +50,12 @@ class StaffLoginWindow(Screen):
     def reset_inputs(self):
         self.email.text = ""
         self.password.text = ""
+
+    def find_help(self):
+        help.prev_window = "st_login"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

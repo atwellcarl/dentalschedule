@@ -32,8 +32,16 @@
             on_release: root.prev_week()
         Button:
             text: "< back"
-            size_hint: (.1, .15)
+            size_hint: (.1, .05)
             pos_hint: {"top": 1, "left": 1}
             on_release:
                 root.manager.transition.direction = "right"
                 root.manager.current = "pat_home"
+        Button:
+            text: "Help?"
+			font_size: 16
+            size_hint: (.1, .05)
+            pos_hint: {"x": .9, "y": .95}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.find_help()

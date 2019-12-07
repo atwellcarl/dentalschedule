@@ -11,6 +11,8 @@ from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
 from kivy.uix.label import Label
 from windowclasses import PatientLoginWindow as plw
+from windowclasses import Help as help
+
 
 import db_control as db
 
@@ -49,7 +51,7 @@ class PatientEditAppWindow(Screen):
 
     def delete_app(self, instance):
         print("{} {} {}".format(int(instance.id), plw.user_info[0], "Patient"))
-        
+
         db.delete_appt(int(instance.id), plw.user_info[0], "Patient")
         self.remove_buttons()
         self.pop("The appointment you selected has been deleted.")
@@ -60,3 +62,12 @@ class PatientEditAppWindow(Screen):
                       content = Label(text = message),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
+
+    def find_help(self):
+        help.prev_window = "pat_edit_app"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

@@ -9,6 +9,8 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
+from windowclasses import Help as help
+
 import db_control as db
 
 user_info = [None] * 4
@@ -48,3 +50,12 @@ class AdminLoginWindow(Screen):
     def reset_inputs(self):
         self.password.text = ""
         self.email.text = ""
+
+    def find_help(self):
+        help.prev_window = "admin_login"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

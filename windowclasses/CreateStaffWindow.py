@@ -8,6 +8,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+from windowclasses import Help as help
+from windowclasses import WindowManager as wm
 
 import hashlib, binascii, os
 import db_control as db
@@ -72,3 +74,12 @@ class CreateStaffWindow(Screen):
                                     salt, 100000)
         pwdhash = binascii.hexlify(pwdhash)
         return (salt + pwdhash).decode('ascii')
+
+    def find_help(self):
+        help.prev_window = "create_staff"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

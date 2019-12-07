@@ -11,6 +11,8 @@ from kivy.uix.floatlayout import FloatLayout
 
 from windowclasses import WindowManager as wm
 from windowclasses import AdminLoginWindow as alw
+from windowclasses import Help as help
+
 
 # Inquires about what administrative actions the Admin
 # would like to perform
@@ -28,6 +30,15 @@ class AdminActionWindow(Screen):
 
     def logout(self):
         for info in alw.user_info:
-            print (info)
-        for info in alw.user_info:
             info = None
+        wm.screen_manager.current = "user"
+
+
+    def find_help(self):
+        help.prev_window = "admin_action"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

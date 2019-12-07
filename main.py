@@ -30,6 +30,7 @@ from windowclasses import PatientEditAppWindow as peaw
 from windowclasses import PatientPostDeleteWindow as ppdw
 from windowclasses import StaffEditAppWindow as seaw
 from windowclasses import StaffScheduleAppWindow as ssaw
+from windowclasses import Help
 
 user_info = [None] * 4
 dr_info = [None] * 4
@@ -57,6 +58,7 @@ wm.windows.append(peaw.PatientEditAppWindow(name = "pat_edit_app"))
 wm.windows.append(ppdw.PatientPostDeleteWindow(name = "pat_post_del"))
 wm.windows.append(seaw.StaffEditAppWindow(name = "staff_edit_app"))
 wm.windows.append(ssaw.StaffScheduleAppWindow(name = "staff_sched_app"))
+wm.windows.append(Help.Help(name = "help"))
 
 for window in wm.windows:
     screen_manager.add_widget(window)

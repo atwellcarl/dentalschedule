@@ -129,7 +129,7 @@ def view_user_schedule(user_id, user_type):
 
         hygenist_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                            WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
+                            WHERE pat_id == {} AND emp_type LIKE "%Hygienist%" """.format(user_id)
 
         # hygenist_query = """SELECT emp_fn, emp_ln
         #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
@@ -145,7 +145,7 @@ def view_user_schedule(user_id, user_type):
             appointment.append(row[4])
             appointment.append(row[5])
             appointment.append("No")
-            appointment.append("Hygenist")
+            appointment.append("Hygienist")
             ls.append(appointment)
             appointment = []
         for row in c.execute(hygenist_query):

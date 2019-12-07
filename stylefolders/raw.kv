@@ -83,9 +83,17 @@
                 root.reset_inputs()
         Button:
             text: "Back >"
-            size_hint: (.15, .05)
+            size_hint: (.1, .05)
             pos_hint: {'top':1, 'right':1}
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "pat_login"
                 root.reset_inputs()
+        Button:
+            text: "Help?"
+			font_size: 16
+            size_hint: (.1, .05)
+            pos_hint: {"x": .9, "y": .95}
+            on_release:
+                root.manager.transition.direction = "left"
+                root.find_help()

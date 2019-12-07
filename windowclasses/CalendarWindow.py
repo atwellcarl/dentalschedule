@@ -12,6 +12,8 @@ from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
 from windowclasses import PatientLoginWindow as plw
 from windowclasses import MakeAppointmentWindow as maw
+from windowclasses import Help as help
+
 import db_control as db
 import time
 import calendar
@@ -199,3 +201,12 @@ class CalendarWindow(Screen):
         # print("creating an app with {} and {}".format(maw.dr_info[0], maw.dr_info[1]))
         wm.screen_manager.current = window
         self.sucessful_app(instance)
+
+    def find_help(self):
+        help.prev_window = "calendar"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

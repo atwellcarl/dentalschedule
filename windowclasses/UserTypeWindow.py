@@ -8,8 +8,9 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-
+from windowclasses import Help as help
 from windowclasses import WindowManager as wm
+
 
 class UserTypeWindow(Screen):
     kv = Builder.load_file("stylefolders/utw.kv")
@@ -17,3 +18,11 @@ class UserTypeWindow(Screen):
         wm.screen_manager.current = "pat_login"
     def staff(self):
         wm.screen_manager.current = "staff_type"
+    def find_help(self):
+        help.prev_window = "user"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

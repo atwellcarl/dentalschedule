@@ -10,6 +10,8 @@ from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from windowclasses import WindowManager as wm
 from windowclasses import StaffLoginWindow as slw
+from windowclasses import Help as help
+
 import db_control as db
 
 class StaffEditAppWindow(Screen):
@@ -56,3 +58,11 @@ class StaffEditAppWindow(Screen):
                       content = Label(text = message),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
+    def find_help(self):
+        help.prev_window = "staff_edit_app"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"

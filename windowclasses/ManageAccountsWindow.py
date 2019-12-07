@@ -8,12 +8,19 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
+from windowclasses import Help as help
+from windowclasses import WindowManager as wm
+
+
 import db_control as db
 
 class ManageAccountsWindow(Screen):
     kv = Builder.load_file("stylefolders/maccw.kv")
     email = ObjectProperty(None)
     type = ObjectProperty(None)
+
+    def view_schedule(self):
+        print("hmmm... this is darian work")
 
     #Method for reactivating a previously deactivated user account
     def reactivate(self):
@@ -64,3 +71,12 @@ class ManageAccountsWindow(Screen):
                       content = Label(text = message),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
+
+    def find_help(self):
+        help.prev_window = "manage_accounts"
+
+        help.text = ("""
+                      Enter words of wisdom here.
+                      """)
+
+        wm.screen_manager.current = "help"
