@@ -30,15 +30,22 @@ class CreateStaffWindow(Screen):
             self.pop_up("Bad Data", "Invalid Email")
         elif(len(self.phone.text) < 10 or len(self.phone.text) > 10):
             self.pop_up("Bad Data", "Invalid Phone Number")
-        elif(self.emp_type.text != "Hygienist" or self.emp_type.text != "Doctor"):
-            self.pop_up("Bad Data", "Invalid employee type\n (Must be Doctor or Hygienist)")
-        # data inputs are good, so create the account
-        else:
+        elif(self.emp_type.text == "Doctor"):
             db.create_user(self.fr_name.text, self.lt_name.text, self.email.text,
                             passw, self.phone.text, self.emp_type.text,
                             "Employee")
             self.pop_up("Account Created", "{} {}'s account created".format(self.fr_name.text, self.lt_name.text))
             self.reset_inputs()
+        elif(self.emp_type.text == "Hygienist"):
+            db.create_user(self.fr_name.text, self.lt_name.text, self.email.text,
+                            passw, self.phone.text, self.emp_type.text,
+                            "Employee")
+            self.pop_up("Account Created", "{} {}'s account created".format(self.fr_name.text, self.lt_name.text))
+            self.reset_inputs()
+        # data inputs are good, so create the account
+        else:
+            self.pop_up("Bad Data", "Invalid employee type\n (Must be Doctor or Hygienist)")
+
 
     # Pop up window for giving the user feedback
     # handles errors or successful operations

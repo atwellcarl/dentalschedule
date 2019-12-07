@@ -55,7 +55,7 @@ class MakeAppointmentWindow(Screen):
     def choose_hygen(self):
         emp_list = db.list_employees()
         for employee in emp_list:
-            if(employee[0] == "Hygenist"):
+            if(employee[0] == "Hygienist"):
                 self.dr_list.append(employee)
         y_pos = .6
         for doctor in self.dr_list:
@@ -77,7 +77,7 @@ class MakeAppointmentWindow(Screen):
         self.dr_list = []
         for button in self.dr_button:
             self.remove_widget(button)
-        self.no_func("Choose a hygenist")
+        self.no_func("Choose a hygienist")
         self.choose_hygen()
 
     def hygen_pressed(self, instance):

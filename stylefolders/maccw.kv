@@ -1,6 +1,7 @@
 <ManageAccountsWindow>:
     name: "manage_accounts"
     email: email
+    type: type
 
 	canvas:
 		Rectangle:
@@ -25,16 +26,41 @@
             size_hint: (.3, .05)
             multiline: False
             pos_hint: {"center_x": .5, "center_y": .65 }
+        Label:
+            text: "User Type: "
+            size_hint: (.2, .15)
+            pos_hint: {"center_x": .25, "center_y": .55 }
+            color: (0, 0, 0, 1)
+            markup: True
+            font_size: 20
+        TextInput:
+            id: type
+            size_hint: (.3, .05)
+            multiline: False
+            pos_hint: {"center_x": .5, "center_y": .55 }
+        Label:
+            text: "Type Patient or Employee exactly"
+            size_hint: (.2, .15)
+            pos_hint: {"center_x": .5, "center_y": .50 }
+            color: (0, 0, 0, 1)
+            markup: True
+            font_size: 14
         Button:
             text: "Activate"
             size_hint: (.2, .1)
-            pos_hint: {"center_x":.333, "y": .3}
+            pos_hint: {"center_x":.233, "y": .3}
+            on_release:
+                root.reactivate()
+        Button:
+            text: "View Schedule"
+            size_hint: (.2, .1)
+            pos_hint: {"center_x":.5, "y": .3}
             on_release:
                 root.reactivate()
         Button:
             text: "Deactivate"
             size_hint: (.2, .1)
-            pos_hint: {"center_x":.666, "y": .3}
+            pos_hint: {"center_x":.766, "y": .3}
             on_release:
                 root.deactivate()
 		Button:

@@ -45,12 +45,13 @@ class PatientEditAppWindow(Screen):
 
     def remove_buttons(self):
         for item in self.buttons:
-            print(item.text)
             self.remove_widget(item)
 
     def delete_app(self, instance):
         print("{} {} {}".format(int(instance.id), plw.user_info[0], "Patient"))
+        
         db.delete_appt(int(instance.id), plw.user_info[0], "Patient")
+        self.remove_buttons()
         self.pop("The appointment you selected has been deleted.")
         wm.screen_manager.current = "pat_post_del"
 

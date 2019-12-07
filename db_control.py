@@ -54,13 +54,11 @@ def is_user(email, password, usr_type):
             return verify_password(output[0], password)
             # if output[0] == password:
             #     return True
-
     return False
-
 
 # Returns a patients ID given their email as the only parameter
 def get_pat_id(email):
-    id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "%{}%" """.format(email)
+    id_query = """SELECT pat_id FROM Patient WHERE pat_email LIKE "{}" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
 
@@ -74,7 +72,7 @@ def get_pat_id(email):
 
 # Returns an employees ID given their email as the only parameter
 def get_emp_id(email):
-    id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "%{}%" """.format(email)
+    id_query = """SELECT emp_id FROM Employee WHERE emp_email LIKE "{}" """.format(email)
     c.execute(id_query)
     id_num = c.fetchone()
 
@@ -297,7 +295,6 @@ def get_appt_id(row, user_id, user_type):
             return None
 
         return apt_id[0]
-
 
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
