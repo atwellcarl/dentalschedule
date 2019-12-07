@@ -63,7 +63,15 @@ class RegisterAccountWindow(Screen):
         help.prev_window = "reg_acc_win"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      To register a new account please fill in every field.
+                      After register account is clicked you will be able taken
+                      back to the patient login page where you can immediatly
+                      enter your email and password to be taken to your brand
+                      new personal homepage.
+
+                                    For further assitance feel free
+                                      to call our office directly
+                                             608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

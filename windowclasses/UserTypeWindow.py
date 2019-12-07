@@ -22,7 +22,16 @@ class UserTypeWindow(Screen):
         help.prev_window = "user"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      Hello,
+                      The page you were just on is meant to direct patients
+                      and dental office employees to the appropriate login
+                      page. If you do not work for the office and would like
+                      to sign up or sign into an account, please choose the
+                      patient button.
+
+                                      For further assitance feel free
+                                        to call our office directly
+                                               608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

@@ -206,7 +206,19 @@ class CalendarWindow(Screen):
         help.prev_window = "calendar"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The previous page is meant to choose a date and time for
+                      an appointment. Dates are diplayed in a one week format
+                      starting with sunday on the left and saturday on the right.
+                      open time slots are marked green while unavailable times
+                      are marked red. If a week is full, i.e. entirely red, then
+                      press the next button to see the available for the next week.
+                      To choose an appointment press the desired time, the appointment
+                      will immediatly be scheduled and a window will display
+                      confirmation.
+
+                                        For further assitance feel free
+                                          to call our office directly
+                                                 608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

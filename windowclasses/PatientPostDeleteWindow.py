@@ -23,7 +23,16 @@ class PatientPostDeleteWindow(Screen):
         help.prev_window = "pat_post_del"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The page you were just on is meant for choosing
+                      whether to create a new appointment in place of
+                      the one you deleted or return to your personalized
+                      homepage. If you choose to return to the homepage
+                      you can still create a new appointment by clicking
+                      the appropriate button.
+
+                                    For further assitance feel free
+                                      to call our office directly
+                                             608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

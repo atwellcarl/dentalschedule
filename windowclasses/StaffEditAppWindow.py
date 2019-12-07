@@ -62,7 +62,16 @@ class StaffEditAppWindow(Screen):
         help.prev_window = "staff_edit_app"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The page you were just on is for removing an
+                      appointment from your schedule. To do this,
+                      simply click the button corresponding to the
+                      appointment you would like to change. If no
+                      appointments appear, then your schedule is
+                      free. PLease note, that deleting an appointment
+                      will change other users' schedules.
+
+                            For further assitance, contact
+                               your supervisor or admin
                       """)
 
         wm.screen_manager.current = "help"

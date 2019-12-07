@@ -102,7 +102,18 @@ class MakeAppointmentWindow(Screen):
         help.prev_window = "make_appointment"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      the previous page is the first stage of creating a new
+                      appoinment. Here you should enter a description of your
+                      new appointment (i.e. for a standard cleaning type "Cleaning").
+                      Then you will need to choose a doctor by clicking the button
+                      with their name. After that you will be prompted to choose a
+                      hygienist by clicking the button with their name. Once a
+                      hygienist if choosen you will immediatly be taken to a page to
+                      choose a date and time.
+
+                                            For further assitance feel free
+                                              to call our office directly
+                                                     608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

@@ -42,11 +42,6 @@ class StaffLoginWindow(Screen):
                       size_hint = (None, None), size = (400, 400))
         popup.open()
 
-    # def logout(self):
-    #     for info in user_info:
-    #         print (info)
-    #     for info in user_info:
-    #         info = None
     def reset_inputs(self):
         self.email.text = ""
         self.password.text = ""
@@ -55,7 +50,12 @@ class StaffLoginWindow(Screen):
         help.prev_window = "st_login"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      To login you will need your personal email and
+                      the password for your account. If it is your first
+                      time loging in as an employee, please contact the
+                      admin for your login credentials. If you have
+                      forgotten your credentials you will again need to
+                      speak with the admin.
                       """)
 
         wm.screen_manager.current = "help"

@@ -84,7 +84,14 @@ class PatientHomeWindow(Screen):
         help.prev_window = "pat_home"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The previous page is your personalized homepage. It
+                      displays any appointments you scheduled in the future.
+                      From there you can perform actions such as scheduling
+                      a new appointment or deleting a current one.
+
+                                    For further assitance feel free
+                                      to call our office directly
+                                             608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

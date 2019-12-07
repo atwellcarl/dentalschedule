@@ -79,7 +79,10 @@ class CreateStaffWindow(Screen):
         help.prev_window = "create_staff"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The page you were just on is for creating new employee
+                      accounts. All data field must be filled inorder for the
+                      account to be created. If the creation was successful,
+                      a window will display a message indicating so.
                       """)
 
         wm.screen_manager.current = "help"

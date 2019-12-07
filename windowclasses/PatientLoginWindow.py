@@ -52,7 +52,16 @@ class PatientLoginWindow(Screen):
         help.prev_window = "pat_login"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The previous page is meant for a patient to login
+                      or register an account. If you have never scheduled
+                      an appointment online, please register a new account.
+                      For returning users, enter your personal email and
+                      password. If you have forgotten either your email or
+                      password please contact our office to reset them.
+
+                                    For further assitance feel free
+                                      to call our office directly
+                                             608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

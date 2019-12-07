@@ -327,9 +327,9 @@ def delete_user(usr_type, usr_id):
                             SET pat_valid = 1
                             WHERE pat_id = {}""".format(usr_id)
 
-        c.execute(update_stmt)
-        commit()
-        
+    c.execute(update_stmt)
+    commit()
+
 
 def set_notification(appt_id):
     pat_notify_id = """SELECT pat_id

@@ -24,7 +24,12 @@ class StaffUserType(Screen):
         help.prev_window = "staff_type"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The page you were just on is meant to direct employees
+                      to their corresponding logins based on job title. (for
+                      example, if you are a Hygienist click the Hygienist button)
+
+                                        For further asistance, please
+                                           contact your supervisor
                       """)
 
         wm.screen_manager.current = "help"

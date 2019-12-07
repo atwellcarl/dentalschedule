@@ -58,7 +58,18 @@ class StaffScheduleAppWindow(Screen):
         help.prev_window = "staff_sched_app"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The page you were just on is for setting up an
+                      appointment for a patient. There are three email
+                      fields that must contain current user emails that
+                      exactly match the ones in our system. If the email
+                      cannot be found, you will be notified after you click
+                      the enter button. Afterwords, you can try to re-enter
+                      a valid email. Be sure to add an appoinment description!
+                      If all fields are correct you can click enter to choose
+                      a day and time for the new appointmen.
+
+                                For further assitance, please
+                               contact your supervisor or admin.
                       """)
 
         wm.screen_manager.current = "help"

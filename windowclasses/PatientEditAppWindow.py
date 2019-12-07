@@ -67,7 +67,18 @@ class PatientEditAppWindow(Screen):
         help.prev_window = "pat_edit_app"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The previous page is meant for delting a current
+                      appointment. To delete an appointment simply click
+                      the button corresponding to it. You will be notified
+                      immediatly of it's deletion and taken to a new page
+                      to either schedule a new appointment or return to your
+                      homepage. If no buttons appear, then you do not have
+                      any future appointments and you should click the back
+                      button to return back to your homepage.
+
+                                    For further assitance feel free
+                                      to call our office directly
+                                             608-444-1212
                       """)
 
         wm.screen_manager.current = "help"

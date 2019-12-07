@@ -38,7 +38,9 @@ class AdminActionWindow(Screen):
         help.prev_window = "admin_action"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      This the main page for the admin to perform administrative
+                      actions. The main actions are creating new employee users
+                      and managing new user accounts. 
                       """)
 
         wm.screen_manager.current = "help"

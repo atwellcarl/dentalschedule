@@ -60,7 +60,12 @@ class StaffHomeWindow(Screen):
         help.prev_window = "st_home"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The page were just on is your personalized home page.
+                      There, you cen view your schedule and make changes to
+                      it by clicking buttons such as delete an appointment
+
+                                        for futher assitance please
+                                      contact your admin or supervisor.
                       """)
 
         wm.screen_manager.current = "help"

@@ -55,7 +55,9 @@ class AdminLoginWindow(Screen):
         help.prev_window = "admin_login"
 
         help.text = ("""
-                      Enter words of wisdom here.
+                      The previous page is meant only for the admin to login.
+                      If you are not the admin, please click the back button
+                      to return and choose a different user type.
                       """)
 
         wm.screen_manager.current = "help"
