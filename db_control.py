@@ -350,22 +350,22 @@ def delete_user(usr_type, usr_id):
 
 def set_notification(appt_id):
     pat_update = """UPDATE Patient
-                        SET pat_notification = {}
+                        SET pat_notification = 1
                         WHERE pat_id = (SELECT pat_id
                             FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
-                            WHERE appt_id = {})""".format(1, appt_id)
+                            WHERE appt_id = {})""".format(appt_id)
 
     dr_update = """UPDATE Employee
-                            SET emp_notification = {}
+                            SET emp_notification = 1
                             WHERE emp_id = (SELECT emp_id
                                 FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                                WHERE appt_id = {} AND emp_type = "Doctor")""".format(1, appt_id)
+                                WHERE appt_id = {} AND emp_type LIKE "Doctor")""".format(appt_id)
 
     hyg_update = """UPDATE Employee
-                            SET emp_notification = {}
+                            SET emp_notification = 1
                             WHERE emp_id = (SELECT emp_id
                                 FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                                WHERE appt_id = {} AND emp_type = "Hygenist")""".format(1, appt_id)
+                                WHERE appt_id = {} AND emp_type LIKE "Hygenist")""".format(appt_id)
 
     c.execute(dr_update)
     c.execute(pat_update)
