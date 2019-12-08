@@ -178,15 +178,8 @@ def view_user_schedule(user_id, user_type):
                                 FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works
                                 WHERE emp_id == {} """.format(user_id)
 
-        # for row in c.execute(info_query):
-        #     s = "{}: Start: {}  Finish: {}  Description: {} for {} {}".format(row[0], row[1], row[2], row[3], row[4],
-        #                                                                       row[5])
-        #     ls.append(s)
-
         appoinment = []
         for row in c.execute(info_query):
-            # s = "{}: Start: {}  Finish: {}  Description: {} with Dr. {} {}".format(row[0], row[1], row[2], row[3],
-            #                                                                        row[4], row[5])
             appoinment.append(row[0])
             appoinment.append(row[1])
             appoinment.append(row[2])
@@ -213,8 +206,6 @@ def list_employees():
         emp.append(row[3])
         ls.append(emp)
         emp = []
-        # s = "{}: {} {} {}".format(row[0], row[1], row[2], row[3])
-        # ls.append(s)
 
     return ls
 
@@ -292,11 +283,12 @@ def get_appt_id(row, user_id, user_type):
                         WHERE pat_id = {}
                         LIMIT 1 OFFSET {}""".format(user_id, row)
         c.execute(appt_id_q)
-        if appt_id_q is None:
+        output = c.fetchone()
+        if output is None:
             print("No id found")
             return None
 
-            return appt_id_q[0]
+            return output[0]
 
     elif user_type == "Employee":
         appt_id_q = """SELECT appt_id
@@ -304,16 +296,18 @@ def get_appt_id(row, user_id, user_type):
                          WHERE emp_id = {}
                          LIMIT 1 OFFSET {}""".format(user_id, row)
         c.execute(appt_id_q)
-        if appt_id_q is None:
+        output = c.fetchone()
+        if output is None:
             print("No id found")
             return None
 
-        return appt_id_q[0]
+        return output[0]
 
 
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
     appt_id = get_appt_id(row, user_id, user_type)
+    print(appt_id)
     set_notification(appt_id)
 
     del_request = """DELETE FROM Requests
@@ -336,12 +330,12 @@ def delete_user(usr_type, usr_id):
     update_stmt = ""
     if usr_type == "Employee":
         update_stmt = """UPDATE Employee
-                        SET emp_valid = 1
+                        SET emp_valid = "false"
                         WHERE emp_id = {}""".format(usr_id)
 
     elif usr_type == "Patient":
         update_stmt = """UPDATE Patient
-                            SET pat_valid = 1
+                            SET pat_valid = "false"
                             WHERE pat_id = {}""".format(usr_id)
 
     c.execute(update_stmt)
@@ -365,7 +359,7 @@ def set_notification(appt_id):
                             SET emp_notification = 1
                             WHERE emp_id = (SELECT emp_id
                                 FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                                WHERE appt_id = {} AND emp_type LIKE "Hygenist")""".format(appt_id)
+                                WHERE appt_id = {} AND emp_type LIKE "Hygienist")""".format(appt_id)
 
     c.execute(dr_update)
     c.execute(pat_update)

@@ -50,7 +50,7 @@ class ManageAccountsWindow(Screen):
         if(self.type.text == "Employee"):
             if(db.get_emp_id(self.email.text) != None):
                 self.id = db.get_emp_id(self.email.text)
-                # self.del_apps("Employee")
+                self.del_apps("Employee")
                 db.delete_user("Employee", self.id)
                 self.pop_up("Deactivated", "The selected account has been deactivated")
                 self.email.text = ""
@@ -60,7 +60,7 @@ class ManageAccountsWindow(Screen):
         elif(self.type.text == "Patient"):
             if(db.get_pat_id(self.email.text) != None):
                 self.id = db.get_pat_id(self.email.text)
-                # self.del_apps("Patient")
+                self.del_apps("Patient")
                 db.delete_user("Patient", self.id)
                 self.pop_up("Deactivated", "The selected account has been deactivated")
                 self.email.text = ""
