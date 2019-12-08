@@ -14,6 +14,8 @@ def commit():
 def close():
     con.close()
 
+
+# Returns true if the user is still in the system (ie.. hasn't been deleted)
 def is_valid(email, usr_type):
     valid_bit = None
     if usr_type == "Patient":
@@ -30,6 +32,8 @@ def is_valid(email, usr_type):
     return output[0] == "true"
 
 
+# Converts the hashed password to a normal password and returns true if the password typed in the same as the stored password
+# Returns false otherwise
 def verify_password(stored_password, provided_password):
     """Verify a stored password against one provided by user"""
     salt = stored_password[:64]
@@ -41,8 +45,8 @@ def verify_password(stored_password, provided_password):
     pwdhash = binascii.hexlify(pwdhash).decode('ascii')
     return pwdhash == stored_password
 
-# Returns a boolean true or false if any users login info is valid
-# @Param email, password, type of user
+
+# Returns a boolean true or false if any users login info is valid and if they are still in the system
 def is_user(email, password, usr_type):
     print("{} {} {}".format(email, password, usr_type))
     if email == "Admin":
@@ -127,14 +131,16 @@ def get_emp_email(id_num):
 
     return email[0]
 
+
+#
 def get_hygen(temp, query, appointment):
     for row in query:
-        # print(tow)
         temp1 = "{} {}".format(row[0], row[1])
-        if(temp == temp1):
+        if temp == temp1:
             print("MAtch")
             appointment.append(row[4])
             appointment.append(row[5])
+
 
 # Returns a list of output strings showing every appointment a user has in the database
 def view_user_schedule(user_id, user_type):
@@ -148,13 +154,8 @@ def view_user_schedule(user_id, user_type):
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
                             WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
 
-        # hygenist_query = """SELECT emp_fn, emp_ln
-        #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-        #                      WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
-
         appointment = []
         for row in c.execute(info_query):
-            temp = "{} {}".format(row[0], row[1])
             appointment.append(row[0])
             appointment.append(row[1])
             appointment.append(row[2])
@@ -169,7 +170,7 @@ def view_user_schedule(user_id, user_type):
             temp1 = "{} {}".format(row[0], row[1])
             for item in ls:
                 temp = "{} {}".format(item[0], item[1])
-                if(temp == temp1):
+                if temp == temp1:
                     item[6] = row[4]
                     item[7] = row[5]
 
@@ -195,10 +196,9 @@ def view_user_schedule(user_id, user_type):
 # Returns a list strings, showing all employees in the database
 def list_employees():
     ls = []
-
+    emp = []
     emp_query = """SELECT emp_type, emp_fn, emp_ln, emp_email FROM EMPLOYEE"""
 
-    emp = []
     for row in c.execute(emp_query):
         emp.append(row[0])
         emp.append(row[1])
@@ -218,7 +218,8 @@ def create_user(fn, ln, email, password, phone, emp_type, usr_type):
     insert = ""
     if usr_type == "Employee":
         insert = """INSERT INTO Employee (emp_fn, emp_ln, emp_password, emp_email, emp_phone, emp_type, emp_valid)
-                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, emp_type, 1)
+                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone,
+                                                                                   emp_type, 1)
 
     elif usr_type == "Patient":
         insert = """INSERT INTO Patient (pat_fn, pat_ln, pat_password, pat_email, pat_phone, pat_valid)
@@ -276,6 +277,7 @@ def create_work(user_id, appt_id):
     c.execute(work_query)
 
 
+# Returns an appointment ID int, given the user_id, user_type, and what row it is in the database
 def get_appt_id(row, user_id, user_type):
     if user_type == "Patient":
         appt_id_q = """SELECT appt_id
@@ -326,6 +328,7 @@ def delete_appt(row, user_id, user_type):
     commit()
 
 
+# Given a user type and their ID, this method sets the is_valid attribute in the database to false
 def delete_user(usr_type, usr_id):
     update_stmt = ""
     if usr_type == "Employee":
@@ -342,6 +345,8 @@ def delete_user(usr_type, usr_id):
     commit()
 
 
+# Method takes an appointment ID and sets the has_notification attribute for everyone in that appointment to 1.
+# This can later be checked when the user logs in to determine if a notification shows up
 def set_notification(appt_id):
     pat_update = """UPDATE Patient
                         SET pat_notification = 1
@@ -367,6 +372,8 @@ def set_notification(appt_id):
     commit()
 
 
+# Returns 0 if the user doesn't have a notification,
+# if the user has a notification, it removes it and returns 1
 def has_notification(usr_type, usr_id):
     notification_q = ""
     if usr_type == "Employee":
@@ -388,6 +395,7 @@ def has_notification(usr_type, usr_id):
         return 0
 
 
+#  Changes the has_notification attribute to 0 again, removing the notification from that user
 def remove_notification(usr_type, usr_id):
     remove_q = ""
     if usr_type == "Employee":
