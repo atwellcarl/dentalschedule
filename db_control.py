@@ -14,6 +14,21 @@ def commit():
 def close():
     con.close()
 
+def is_valid(email, usr_type):
+    valid_bit = ""
+    if usr_type == "Patient":
+        valid_bit = """SELECT pat_valid
+                        FROM Patient
+                        WHERE pat_email LIKE "{}" """.format(email)
+
+    elif usr_type == "Employee":
+        valid_bit = """SELECT pat_valid
+                                FROM Patient
+                                WHERE pat_email LIKE "{}" """.format(email)
+    c.execute(valid_bit)
+    return valid_bit[0] == 1
+
+
 def verify_password(stored_password, provided_password):
     """Verify a stored password against one provided by user"""
     salt = stored_password[:64]
@@ -36,25 +51,27 @@ def is_user(email, password, usr_type):
     elif usr_type == "Patient":
         valid_query = """SELECT pat_password
                               FROM Patient
-                              WHERE pat_email LIKE "%{}%" """.format(email)
+                              WHERE pat_email LIKE "{}" """.format(email)
         c.execute(valid_query)
         output = c.fetchone()
         if output is not None:
-            return verify_password(output[0], password)
+            return verify_password(output[0], password) and is_valid(email, usr_type)
             # if output[0] == password:
             #     return True
 
     elif usr_type == "Employee":
         valid_query = """SELECT emp_password
                               FROM Employee
-                              WHERE emp_email LIKE "%{}%" """.format(email)
+                              WHERE emp_email LIKE "{}" """.format(email)
         c.execute(valid_query)
         output = c.fetchone()
         if output is not None:
-            return verify_password(output[0], password)
+            return verify_password(output[0], password) and is_valid(email, usr_type)
             # if output[0] == password:
             #     return True
+
     return False
+
 
 # Returns a patients ID given their email as the only parameter
 def get_pat_id(email):
@@ -86,7 +103,7 @@ def get_emp_id(email):
 
 # Returns a patients email, given their ID
 def get_pat_email(id_num):
-    email_query = """SELECT pat_email FROM Patient WHERE pat_id LIKE "%{}%" """.format(id_num)
+    email_query = """SELECT pat_email FROM Patient WHERE pat_id LIKE "{}" """.format(id_num)
     c.execute(email_query)
     email = c.fetchone()
 
@@ -100,7 +117,7 @@ def get_pat_email(id_num):
 
 # Returns an employees email, given their ID
 def get_emp_email(id_num):
-    email_query = """SELECT emp_email FROM Employee WHERE emp_id LIKE "%{}%" """.format(id_num)
+    email_query = """SELECT emp_email FROM Employee WHERE emp_id LIKE "{}" """.format(id_num)
     c.execute(email_query)
     email = c.fetchone()
 
@@ -130,7 +147,7 @@ def view_user_schedule(user_id, user_type):
 
         hygenist_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                            WHERE pat_id == {} AND emp_type LIKE "%Hygienist%" """.format(user_id)
+                            WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
 
         # hygenist_query = """SELECT emp_fn, emp_ln
         #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
@@ -146,7 +163,7 @@ def view_user_schedule(user_id, user_type):
             appointment.append(row[4])
             appointment.append(row[5])
             appointment.append("No")
-            appointment.append("Hygienist")
+            appointment.append("Hygenist")
             ls.append(appointment)
             appointment = []
         for row in c.execute(hygenist_query):
@@ -294,6 +311,7 @@ def get_appt_id(row, user_id, user_type):
 
         return appt_id_q[0]
 
+
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
     appt_id = get_appt_id(row, user_id, user_type)
@@ -327,38 +345,28 @@ def delete_user(usr_type, usr_id):
                             SET pat_valid = 1
                             WHERE pat_id = {}""".format(usr_id)
 
-    c.execute(update_stmt)
-    commit()
-
+        c.execute(update_stmt)
+        commit()
+        
 
 def set_notification(appt_id):
-    pat_notify_id = """SELECT pat_id
-                        FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
-                        WHERE appt_id = {}""".format(appt_id)
-
-    dr_notify_id = """SELECT emp_id
-                            FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                            WHERE appt_id = {} AND emp_type = "Doctor" """.format(appt_id)
-
-    hyg_notify_id = """SELECT emp_id
-                            FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                            WHERE appt_id = {} AND emp_type = "Hygenist" """.format(appt_id)
-
-    c.execute(pat_notify_id)
-    c.execute(dr_notify_id)
-    c.execute(hyg_notify_id)
-
     pat_update = """UPDATE Patient
                         SET pat_notification = 1
-                        WHERE pat_id = {}""".format(pat_notify_id[0])
+                        WHERE pat_id = (SELECT pat_id
+                            FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
+                            WHERE appt_id = {})""".format(appt_id)
 
-    dr_update = """UPDATE Patient
+    dr_update = """UPDATE Employee
                             SET emp_notification = 1
-                            WHERE emp_id = {}""".format(hyg_notify_id[0])
+                            WHERE emp_id = (SELECT emp_id
+                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                                WHERE appt_id = {} AND emp_type = "Doctor")""".format(appt_id)
 
-    hyg_update = """UPDATE Patient
+    hyg_update = """UPDATE Employee
                             SET emp_notification = 1
-                            WHERE emp_id = {}""".format(dr_notify_id[0])
+                            WHERE emp_id = (SELECT emp_id
+                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                                WHERE appt_id = {} AND emp_type = "Hygenist")""".format(appt_id)
 
     c.execute(pat_update)
     c.execute(dr_update)
@@ -369,17 +377,36 @@ def set_notification(appt_id):
 def has_notification(usr_type, usr_id):
     notification_q = ""
     if usr_type == "Employeee":
-        notification_q = """SELECT emp_id
+        notification_q = """SELECT emp_notification
                                 FROM Employee
                                 WHERE emp_id = {}""".format(usr_id)
 
     elif usr_type == "Patient":
-        notification_q = """SELECT pat_id
+        notification_q = """SELECT pat_notification
                                 FROM Patient
                                 WHERE pat_id = {}""".format(usr_id)
 
     c.execute(notification_q)
     if notification_q[0] == 1:
+        remove_notification(usr_type, usr_id)
         return 1
     else:
         return 0
+
+
+def remove_notification(usr_type, usr_id):
+    remove_q = ""
+    if usr_type == "Employee":
+        remove_q = """UPDATE Employee
+                        SET emp_notification = 0
+                        WHERE emp_id = {}""".format(usr_id)
+
+    elif usr_type == "Patient":
+        remove_q = """UPDATE Patient
+                        SET pat_notification = 0
+                        WHERE pat_id = {}""".format(usr_id)
+
+    c.execute(remove_q)
+    commit()
+
+
