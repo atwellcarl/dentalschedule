@@ -30,11 +30,19 @@ class PatientLoginWindow(Screen):
             user_info[0] = db.get_pat_id(em)
             user_info[1] = "Patient"
             user_info[2] = em
+            if(db.has_notification("Patient", user_info[0]) == 1):
+                self.pop_up("Schedule Change", "Your Schedule has changed since you last \nloged in. Please review your new schedule\ndisplayed on the homepage.")
             wm.screen_manager.current = "pat_home"
         else:
             self.invalid_pat_login()
 
-
+    # Pop up window for giving the user feedback
+    # handles errors or successful operations
+    def pop_up(self,header, message):
+        popup = Popup(title = header,
+                      content = Label(text = message),
+                      size_hint = (None, None), size = (400, 400))
+        popup.open()
 
     def invalid_pat_login(self):
         popup = Popup(title = "Login Failed",

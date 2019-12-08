@@ -32,13 +32,17 @@ class StaffLoginWindow(Screen):
             user_info[0] = db.get_emp_id(em)
             user_info[1] = "Employee"
             user_info[2] = em
+            if(db.has_notification("Employee", user_info[0]) == 1):
+                self.pop_up("Schedule Change", "Your Schedule has changed since you last \nloged in. Please review your new schedule\ndisplayed on the homepage.")
             wm.screen_manager.current = "st_home"
         else:
-            self.invalid_staff_login()
+            self.pop_up("Login Failed", "The email or password provided was not correct.")
 
-    def invalid_staff_login(self):
-        popup = Popup(title = "Login Failed",
-                      content = Label(text = "Invalid email or passowrd."),
+    # Pop up window for giving the user feedback
+    # handles errors or successful operations
+    def pop_up(self, header, info):
+        popup = Popup(title = header,
+                      content = Label(text = info),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
 

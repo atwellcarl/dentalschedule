@@ -15,18 +15,19 @@ def close():
     con.close()
 
 def is_valid(email, usr_type):
-    valid_bit = ""
+    valid_bit = None
     if usr_type == "Patient":
         valid_bit = """SELECT pat_valid
                         FROM Patient
                         WHERE pat_email LIKE "{}" """.format(email)
 
     elif usr_type == "Employee":
-        valid_bit = """SELECT pat_valid
-                                FROM Patient
-                                WHERE pat_email LIKE "{}" """.format(email)
+        valid_bit = """SELECT emp_valid
+                                FROM Employee
+                                WHERE emp_email LIKE "{}" """.format(email)
     c.execute(valid_bit)
-    return valid_bit[0] == 1
+    output = c.fetchone()
+    return output[0] == "true"
 
 
 def verify_password(stored_password, provided_password):
@@ -56,8 +57,6 @@ def is_user(email, password, usr_type):
         output = c.fetchone()
         if output is not None:
             return verify_password(output[0], password) and is_valid(email, usr_type)
-            # if output[0] == password:
-            #     return True
 
     elif usr_type == "Employee":
         valid_query = """SELECT emp_password
@@ -227,12 +226,12 @@ def create_user(fn, ln, email, password, phone, emp_type, usr_type):
 
     insert = ""
     if usr_type == "Employee":
-        insert = """INSERT INTO Employee (emp_fn, emp_ln, emp_password, emp_email, emp_phone, emp_type)
-                        VALUES("{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, emp_type)
+        insert = """INSERT INTO Employee (emp_fn, emp_ln, emp_password, emp_email, emp_phone, emp_type, emp_valid)
+                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, emp_type, 1)
 
     elif usr_type == "Patient":
-        insert = """INSERT INTO Patient (pat_fn, pat_ln, pat_password, pat_email, pat_phone)
-                            VALUES ("{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone)
+        insert = """INSERT INTO Patient (pat_fn, pat_ln, pat_password, pat_email, pat_phone, pat_valid)
+                            VALUES ("{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, 1)
 
     c.execute(insert)
     commit()
@@ -345,38 +344,38 @@ def delete_user(usr_type, usr_id):
                             SET pat_valid = 1
                             WHERE pat_id = {}""".format(usr_id)
 
-        c.execute(update_stmt)
-        commit()
-        
+    c.execute(update_stmt)
+    commit()
+
 
 def set_notification(appt_id):
     pat_update = """UPDATE Patient
-                        SET pat_notification = 1
+                        SET pat_notification = {}
                         WHERE pat_id = (SELECT pat_id
                             FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
-                            WHERE appt_id = {})""".format(appt_id)
+                            WHERE appt_id = {})""".format(1, appt_id)
 
     dr_update = """UPDATE Employee
-                            SET emp_notification = 1
+                            SET emp_notification = {}
                             WHERE emp_id = (SELECT emp_id
                                 FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                                WHERE appt_id = {} AND emp_type = "Doctor")""".format(appt_id)
+                                WHERE appt_id = {} AND emp_type = "Doctor")""".format(1, appt_id)
 
     hyg_update = """UPDATE Employee
-                            SET emp_notification = 1
+                            SET emp_notification = {}
                             WHERE emp_id = (SELECT emp_id
                                 FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
-                                WHERE appt_id = {} AND emp_type = "Hygenist")""".format(appt_id)
+                                WHERE appt_id = {} AND emp_type = "Hygenist")""".format(1, appt_id)
 
-    c.execute(pat_update)
     c.execute(dr_update)
+    c.execute(pat_update)
     c.execute(hyg_update)
     commit()
 
 
 def has_notification(usr_type, usr_id):
     notification_q = ""
-    if usr_type == "Employeee":
+    if usr_type == "Employee":
         notification_q = """SELECT emp_notification
                                 FROM Employee
                                 WHERE emp_id = {}""".format(usr_id)
@@ -387,7 +386,8 @@ def has_notification(usr_type, usr_id):
                                 WHERE pat_id = {}""".format(usr_id)
 
     c.execute(notification_q)
-    if notification_q[0] == 1:
+    output = c.fetchone()
+    if output[0] == 1:
         remove_notification(usr_type, usr_id)
         return 1
     else:
@@ -408,5 +408,3 @@ def remove_notification(usr_type, usr_id):
 
     c.execute(remove_q)
     commit()
-
-
