@@ -218,12 +218,12 @@ def create_user(fn, ln, email, password, phone, emp_type, usr_type):
     insert = ""
     if usr_type == "Employee":
         insert = """INSERT INTO Employee (emp_fn, emp_ln, emp_password, emp_email, emp_phone, emp_type, emp_valid)
-                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone,
-                                                                                   emp_type, 1)
+                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "true")""".format(fn, ln, password, email, phone,
+                                                                                   emp_type)
 
     elif usr_type == "Patient":
         insert = """INSERT INTO Patient (pat_fn, pat_ln, pat_password, pat_email, pat_phone, pat_valid)
-                            VALUES ("{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, 1)
+                            VALUES ("{}", "{}", "{}", "{}", "{}", "true")""".format(fn, ln, password, email, phone)
 
     c.execute(insert)
     commit()
