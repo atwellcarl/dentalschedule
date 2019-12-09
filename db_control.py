@@ -290,7 +290,7 @@ def get_appt_id(row, user_id, user_type):
             print("No id found")
             return None
 
-            return output[0]
+        return output[0]
 
     elif user_type == "Employee":
         appt_id_q = """SELECT appt_id
@@ -410,3 +410,43 @@ def remove_notification(usr_type, usr_id):
 
     c.execute(remove_q)
     commit()
+    
+
+# Deletes all appointments associated with a user
+def del_user(usr_type, usr_id):
+    del_appt = ""
+    del_requests = ""
+    del_works = ""
+
+    if usr_type == "Employee":
+        del_appt = """DELETE FROM Appointment
+                        WHERE appt_id = (SELECT appt_id 
+                                          FROM  Employee NATURAL JOIN Works NATURAL JOIN Appointment
+                                          WHERE emp_id = {});""".format(usr_id)
+
+        del_works = """DELETE FROM Works
+                                WHERE emp_id = {}""".format(usr_id)
+
+        del_requests = """DELETE FROM Requests
+                                WHERE appt_id = (SELECT appt_id
+                                                  FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Requests
+                                                  WHERE emp_id = {});""".format(usr_id)
+
+    elif usr_type == "Patient":
+        del_appt = """DELETE FROM Appointment
+                        WHERE appt_id = (SELECT appt_id 
+                                          FROM  Patient NATURAL JOIN Requests NATURAL JOIN Appointment
+                                          WHERE pat_id = {});""".format(usr_id)
+        
+        del_works = """DELETE FROM Works
+                        WHERE appt_id = (SELECT appt_id 
+                                          FROM  Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works
+                                          WHERE pat_id = {});""".format(usr_id)
+        
+        del_requests = """DELETE FROM Requests
+                            WHERE appt_it = {}""".format(usr_id)
+        
+        
+    c.execute(del_appt)
+    c.execute(del_requests)
+    c.execute(del_works)
