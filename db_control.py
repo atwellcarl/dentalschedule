@@ -444,7 +444,7 @@ def del_user(usr_type, usr_id):
                                           WHERE pat_id = {});""".format(usr_id)
         
         del_requests = """DELETE FROM Requests
-                            WHERE pat_it = {}""".format(usr_id)
+                            WHERE pat_id = {}""".format(usr_id)
         
         
     c.execute(del_appt)
