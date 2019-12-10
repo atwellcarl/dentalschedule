@@ -1,6 +1,6 @@
 '''
  Allows the dental scheduling to access the database.
- 
+
  Author: Andrew Valdez
  Date: 12/10/2019
 '''
@@ -21,6 +21,7 @@ def commit():
 # Closes the database
 def close():
     con.close()
+
 
 # Returns true if the user is still in the system (ie.. hasn't been deleted)
 def is_valid(email, usr_type):
@@ -146,6 +147,7 @@ def get_hygen(temp, query, appointment):
             appointment.append(row[4])
             appointment.append(row[5])
 
+
 # Returns a list of output strings showing every appointment a user has in the database
 def view_user_schedule(user_id, user_type):
     ls = []
@@ -160,7 +162,6 @@ def view_user_schedule(user_id, user_type):
 
         appointment = []
         for row in c.execute(info_query):
-            temp = "{} {}".format(row[0], row[1])
             appointment.append(row[0])
             appointment.append(row[1])
             appointment.append(row[2])
@@ -175,7 +176,7 @@ def view_user_schedule(user_id, user_type):
             temp1 = "{} {}".format(row[0], row[1])
             for item in ls:
                 temp = "{} {}".format(item[0], item[1])
-                if(temp == temp1):
+                if temp == temp1:
                     item[6] = row[4]
                     item[7] = row[5]
 
@@ -201,10 +202,9 @@ def view_user_schedule(user_id, user_type):
 # Returns a list strings, showing all employees in the database
 def list_employees():
     ls = []
-
+    emp = []
     emp_query = """SELECT emp_type, emp_fn, emp_ln, emp_email FROM EMPLOYEE"""
 
-    emp = []
     for row in c.execute(emp_query):
         emp.append(row[0])
         emp.append(row[1])
@@ -265,6 +265,7 @@ def create_work(user_id, appt_id):
     work_query = """INSERT INTO Works(appt_id, emp_id) VALUES ({}, {})""".format(appt_id, user_id)
     c.execute(work_query)
 
+
 # Returns an appointment ID int, given the user_id, user_type, and what row it is in the database
 def get_appt_id(row, user_id, user_type):
     if user_type == "Patient":
@@ -313,6 +314,7 @@ def delete_appt(row, user_id, user_type):
 
     commit()
 
+
 # Given a user type and their ID, this method sets the is_valid attribute in the database to false
 def delete_user(usr_type, usr_id):
     update_stmt = ""
@@ -328,6 +330,7 @@ def delete_user(usr_type, usr_id):
 
     c.execute(update_stmt)
     commit()
+
 
 # Method takes an appointment ID and sets the has_notification attribute for everyone in that appointment to 1.
 # This can later be checked when the user logs in to determine if a notification shows up
@@ -355,6 +358,7 @@ def set_notification(appt_id):
     c.execute(hyg_update)
     commit()
 
+
 # Returns 0 if the user doesn't have a notification,
 # if the user has a notification, it removes it and returns 1
 def has_notification(usr_type, usr_id):
@@ -377,7 +381,8 @@ def has_notification(usr_type, usr_id):
     else:
         return 0
 
-# Changes the has_notification attribute to 0 again, removing the notification from that user
+
+#  Changes the has_notification attribute to 0 again, removing the notification from that user
 def remove_notification(usr_type, usr_id):
     remove_q = ""
     if usr_type == "Employee":
@@ -393,8 +398,9 @@ def remove_notification(usr_type, usr_id):
     c.execute(remove_q)
     commit()
 
+
 # Deletes all appointments associated with a user
-def del_user_apps(usr_type, usr_id):
+def del_user(usr_type, usr_id):
     del_appt = ""
     del_requests = ""
     del_works = ""
@@ -428,6 +434,6 @@ def del_user_apps(usr_type, usr_id):
                             WHERE pat_id = {}""".format(usr_id)
 
 
-    c.execute(del_works)
     c.execute(del_requests)
+    c.execute(del_works)
     c.execute(del_appt)
