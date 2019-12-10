@@ -1,5 +1,13 @@
+'''
+ A window for the admin to login. Contains user validation
+ and user feedback in the case of invalid credentials.
+
+ Author: Carl Atwell
+ Date: 12/10/2019
+'''
+from windowclasses import WindowManager as wm
+from windowclasses import Help as help
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,14 +16,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-from windowclasses import WindowManager as wm
-from windowclasses import Help as help
-
 import db_control as db
 
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 user_info = [None] * 4
 
-# A window for the admin to login
+
 class AdminLoginWindow(Screen):
     kv = Builder.load_file("stylefolders/alw.kv")
     password = ObjectProperty(None)
@@ -51,6 +57,7 @@ class AdminLoginWindow(Screen):
         self.password.text = ""
         self.email.text = ""
 
+    # Sets the text in the help class to useful info about the page.
     def find_help(self):
         help.prev_window = "admin_login"
 

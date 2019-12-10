@@ -1,5 +1,17 @@
+'''
+ Class is used for scheduling appointments. This will display one
+ week at a time (x-axis is days of the week, y-axis is time of day).
+ The next and prev buttons can be used to toggle between weeks and
+ to choose aan appoinment simply click a green highlighted button.
+
+ Author: Carl Atwell and Darian Boeck
+ Date: 12/10/2019
+'''
+from windowclasses import WindowManager as wm
+from windowclasses import PatientLoginWindow as plw
+from windowclasses import MakeAppointmentWindow as maw
+from windowclasses import Help as help
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,19 +20,14 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-
-from windowclasses import WindowManager as wm
-from windowclasses import PatientLoginWindow as plw
-from windowclasses import MakeAppointmentWindow as maw
-from windowclasses import Help as help
-
 import db_control as db
 import time
 import calendar
 
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 window = "pat_home"
-# Class is used for scheduling appointments. This will display one
-# week at a time (x-axis is days of the week, y-axis is time of day)
+
+
 class CalendarWindow(Screen):
     kv = Builder.load_file("stylefolders/cw.kv")
 
@@ -28,7 +35,6 @@ class CalendarWindow(Screen):
     year = time.tm_year
     month = time.tm_mon
     week_math = calendar.monthrange(year, month)
-
 
     #logic to decide which week of the month the current day is in.
     week = 0
@@ -62,6 +68,7 @@ class CalendarWindow(Screen):
             if(dr_schedule == cur_app):
                 return False
         return True
+
     # Takes a day, hour,day of week, email
     # and determins if the patient already has
     # an appointment
@@ -84,7 +91,7 @@ class CalendarWindow(Screen):
         button_day = str(self.p[self.week][i]).split("-")[2]
         temp = True
         # if its the weekend
-        if(i ==0 or i == 6):
+        if(i == 0 or i == 6):
             temp = False
         if(self.time.tm_year == self.year):
             # if the day already passed
@@ -149,7 +156,7 @@ class CalendarWindow(Screen):
             pos_y -= .05
             pos_x = .15
 
-    #logic for what the next week should look like
+    # logic for what the next week should look like
     def next_week(self):
         # if month doesnt change
         if(self.week < 4):
@@ -159,7 +166,7 @@ class CalendarWindow(Screen):
             self.week = 0
             self.month += 1
         # if the month and year should change
-        elif(self.week >=4 and self.month == 12):
+        elif(self.week >= 4 and self.month == 12):
             self.week = 0
             self.month = 1
             self.year += 1
@@ -176,10 +183,10 @@ class CalendarWindow(Screen):
 
         # if month doesnt change
         elif(self.week > 1):
-            self.week =self.week - 1
+            self.week = self.week - 1
 
         # if the month and year should change
-        elif(self.week ==1 and self.month == 1):
+        elif(self.week == 1 and self.month == 1):
             self.week = 4
             self.month = 12
             self.year = self.year - 1
@@ -202,6 +209,7 @@ class CalendarWindow(Screen):
         wm.screen_manager.current = window
         self.sucessful_app(instance)
 
+    # Sets the help window text to useful info about the calendar window
     def find_help(self):
         help.prev_window = "calendar"
 

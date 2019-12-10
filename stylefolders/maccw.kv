@@ -5,15 +5,16 @@
 
 	canvas:
 		Rectangle:
-			source: 'Images/grad1.jpg'
+			source: 'Images/grad2.jpg'
 			size: self.size
 			pos: self.pos
 
 
     FloatLayout:
         Label:
-            text: "Remove and view accounts (patient or employee)"
+            text: "Remove and view accounts (Patient or Employee)"
             pos_hint: {"center_x": 0.5, "center_y": 0.85}
+            color: (0, 0, 0, 1)
         Label:
             text: "User Email: "
             size_hint: (.2, .15)
@@ -46,21 +47,15 @@
             markup: True
             font_size: 14
         Button:
-            text: "Activate"
-            size_hint: (.2, .1)
-            pos_hint: {"center_x":.233, "y": .3}
-            on_release:
-                root.reactivate()
-        Button:
             text: "View Schedule"
             size_hint: (.2, .1)
-            pos_hint: {"center_x":.5, "y": .3}
+            pos_hint: {"center_x":.33, "y": .3}
             on_release:
                 root.view_schedule()
         Button:
             text: "Deactivate"
             size_hint: (.2, .1)
-            pos_hint: {"center_x":.766, "y": .3}
+            pos_hint: {"center_x":.666, "y": .3}
             on_release:
                 root.deactivate()
 		Button:

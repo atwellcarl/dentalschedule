@@ -1,5 +1,14 @@
+'''
+ This handels the staff user home page. Allows the user to see their
+ schedule and choose to edit it. 
+
+ Author: Carl Atwell and Darian Boeck
+ Date: 12/10/2019
+'''
+from windowclasses import StaffLoginWindow as slw
+from windowclasses import Help as help
+from windowclasses import WindowManager as wm
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,13 +17,11 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-from windowclasses import StaffLoginWindow as slw
-from windowclasses import Help as help
-from windowclasses import WindowManager as wm
-
-
 import db_control as db
 import time
+
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+
 
 class StaffHomeWindow(Screen):
     kv = Builder.load_file("stylefolders/shw.kv")
@@ -40,7 +47,7 @@ class StaffHomeWindow(Screen):
                     app_time = "{}{}{}{}0".format(temp[0], temp[1], temp[2], temp2[0])
                 else:
                     app_time = "{}{}{}{}".format(temp[0], temp[1], temp[2], temp2[0])
-                if(cur_time < app_time):
+                if(int(cur_time) < int(app_time)):
                     line1 = "Date: {}".format(app[0])
                     line2 = "Time: {}".format(app[1])
                     line3 = "Description: {}".format(app[3])
@@ -50,12 +57,14 @@ class StaffHomeWindow(Screen):
         else:
             self.appointment.text = "No Current Appointments."
 
+    # Sets globals to none to secure logout
     def logout(self):
         for info in slw.user_info:
             print(info)
         for info in slw.user_info:
             info = None
 
+    # Sets Help screen text to useful information about the page
     def find_help(self):
         help.prev_window = "st_home"
 

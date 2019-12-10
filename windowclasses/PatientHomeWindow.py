@@ -1,5 +1,14 @@
+'''
+ This is the class that allows patient users to naviage their home page.
+ They can view their schedule uppon entry and make or edit appointments.
+
+ Author: Carl Atwell, Darian Boeck
+ Date: 12/10/2019
+'''
+from windowclasses import WindowManager as wm
+from windowclasses import PatientLoginWindow as plw
+from windowclasses import Help as help
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,13 +17,10 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-
-from windowclasses import WindowManager as wm
-from windowclasses import PatientLoginWindow as plw
-from windowclasses import Help as help
-
 import db_control as db
 import time
+
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 
 class PatientHomeWindow(Screen):
@@ -23,23 +29,27 @@ class PatientHomeWindow(Screen):
     time = time.localtime(time.time())
     labels = []
 
+    # helper method for changing schedule labels
     def clean_labels (self):
         for item in self.labels:
             self.remove_widget(item)
         self.labels = []
 
+    # performs the user logout. Sets globals to none
     def logout(self):
         for info in plw.user_info:
             print (info)
         for info in plw.user_info:
             info = None
-        schedule = db.view_user_schedule(int(plw.user_info[0]), "Patient")
         self.clean_labels()
 
+    # helper method to remove labels from the screen
     def remove_labels(self):
         for item in self.labels:
             self.remove_widget(item)
 
+    # This method is called upon login to display
+    # the users schedule
     def get_app(self):
         for item in self.labels:
             self.remove_widget(item)
@@ -77,9 +87,12 @@ class PatientHomeWindow(Screen):
         else:
             self.appointment.text = "No Appointments Scheduled"
 
+    # helper method for changing to the make appointment window
     def make_appointment(self):
         wm.screen_manager.current = "make_appointment"
 
+    # Sets the Help screen text to useful information about a
+    # user's personal home page.
     def find_help(self):
         help.prev_window = "pat_home"
 

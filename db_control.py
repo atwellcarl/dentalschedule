@@ -1,5 +1,13 @@
+'''
+ Allows the dental scheduling to access the database.
+ 
+ Author: Andrew Valdez
+ Date: 12/10/2019
+'''
 import sqlite3
-import hashlib, binascii, os
+import hashlib
+import binascii
+import os
 
 con = sqlite3.connect("AppointmentTracker.db")
 c = con.cursor()
@@ -14,6 +22,7 @@ def commit():
 def close():
     con.close()
 
+# Returns true if the user is still in the system (ie.. hasn't been deleted)
 def is_valid(email, usr_type):
     valid_bit = None
     if usr_type == "Patient":
@@ -30,6 +39,8 @@ def is_valid(email, usr_type):
     return output[0] == "true"
 
 
+# Converts the hashed password to a normal password and returns true if the password typed in the same as the stored password
+# Returns false otherwise
 def verify_password(stored_password, provided_password):
     """Verify a stored password against one provided by user"""
     salt = stored_password[:64]
@@ -41,8 +52,8 @@ def verify_password(stored_password, provided_password):
     pwdhash = binascii.hexlify(pwdhash).decode('ascii')
     return pwdhash == stored_password
 
-# Returns a boolean true or false if any users login info is valid
-# @Param email, password, type of user
+
+# Returns a boolean true or false if any users login info is valid and if they are still in the system
 def is_user(email, password, usr_type):
     print("{} {} {}".format(email, password, usr_type))
     if email == "Admin":
@@ -127,12 +138,11 @@ def get_emp_email(id_num):
 
     return email[0]
 
+# Helper method for searching the database for a hygienist.
 def get_hygen(temp, query, appointment):
     for row in query:
-        # print(tow)
         temp1 = "{} {}".format(row[0], row[1])
         if(temp == temp1):
-            print("MAtch")
             appointment.append(row[4])
             appointment.append(row[5])
 
@@ -146,11 +156,7 @@ def view_user_schedule(user_id, user_type):
 
         hygenist_query = """SELECT date, start_time, end_time, description, emp_fn, emp_ln
                             FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-                            WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
-
-        # hygenist_query = """SELECT emp_fn, emp_ln
-        #                      FROM Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
-        #                      WHERE pat_id == {} AND emp_type LIKE "%Hygenist%" """.format(user_id)
+                            WHERE pat_id == {} AND emp_type LIKE "%Hygienist%" """.format(user_id)
 
         appointment = []
         for row in c.execute(info_query):
@@ -162,7 +168,7 @@ def view_user_schedule(user_id, user_type):
             appointment.append(row[4])
             appointment.append(row[5])
             appointment.append("No")
-            appointment.append("Hygenist")
+            appointment.append("Hygienist")
             ls.append(appointment)
             appointment = []
         for row in c.execute(hygenist_query):
@@ -213,16 +219,14 @@ def list_employees():
 # Creates a user and adds them to a database, takes in personal info as parameters along with an
 # employee type to use if the user being created is an employee
 def create_user(fn, ln, email, password, phone, emp_type, usr_type):
-    print("{} {} {} {} {} {}".format(fn, ln, email, password, phone, usr_type, emp_type))
-
     insert = ""
     if usr_type == "Employee":
         insert = """INSERT INTO Employee (emp_fn, emp_ln, emp_password, emp_email, emp_phone, emp_type, emp_valid)
-                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, emp_type, 1)
+                        VALUES("{}", "{}", "{}", "{}", "{}", "{}", "true")""".format(fn, ln, password, email, phone, emp_type)
 
     elif usr_type == "Patient":
         insert = """INSERT INTO Patient (pat_fn, pat_ln, pat_password, pat_email, pat_phone, pat_valid)
-                            VALUES ("{}", "{}", "{}", "{}", "{}", "{}")""".format(fn, ln, password, email, phone, 1)
+                            VALUES ("{}", "{}", "{}", "{}", "{}", "true")""".format(fn, ln, password, email, phone)
 
     c.execute(insert)
     commit()
@@ -231,16 +235,7 @@ def create_user(fn, ln, email, password, phone, emp_type, usr_type):
 # Adds appointment info to the appointment table and relationship tables to relate patients, employees and appointments
 def create_appointment(date, start, description, duration, pat_email, dr_email, hyg_email):
     # create appointment, need to figure out how to do math on times
-    print(date)
-    print(start)
-    print(description)
-    print(duration)
-    print(pat_email)
-    print(hyg_email)
-    print(dr_email)
-
     end = start + duration
-    print("Date: {}   Start: {} End: {}\n Description: {}\n".format(date, start, end, description))
     appt_query = """INSERT INTO Appointment(start_time, end_time, date, description, duration)
                             VALUES ("{}", "{}", "{}", "{}", {})""".format(start, end, date, description, duration)
     c.execute(appt_query)
@@ -251,9 +246,6 @@ def create_appointment(date, start, description, duration, pat_email, dr_email, 
     appt_id = c.lastrowid
 
     # create request relationship with most recent appointments id
-    print(pat_id)
-    print("dr {}".format(dr_id))
-    print("hygenist {}".format(hyg_id))
     create_request(pat_id, appt_id)
 
     # create works relationship
@@ -264,31 +256,29 @@ def create_appointment(date, start, description, duration, pat_email, dr_email, 
 
 # Called by the create_appointment method to add to the relationship table relating patients and appointments
 def create_request(user_id, appt_id):
-    print("{} {}".format(user_id, appt_id))
     req_query = """INSERT INTO Requests(pat_id, appt_id) VALUES ({}, {})""".format(user_id, appt_id)
     c.execute(req_query)
 
 
 # Called by the create_appointment method to add to the relationship table to relate doctors and appointments
 def create_work(user_id, appt_id):
-    print("{} {} ", user_id, appt_id)
     work_query = """INSERT INTO Works(appt_id, emp_id) VALUES ({}, {})""".format(appt_id, user_id)
     c.execute(work_query)
 
-
+# Returns an appointment ID int, given the user_id, user_type, and what row it is in the database
 def get_appt_id(row, user_id, user_type):
     if user_type == "Patient":
         appt_id_q = """SELECT appt_id
                         FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works NATURAL JOIN Employee
                         WHERE pat_id = {}
                         LIMIT 1 OFFSET {}""".format(user_id, row)
+
         c.execute(appt_id_q)
         output = c.fetchone()
         if output is None:
-            print("No id found")
             return None
 
-            return output[0]
+        return output[0]
 
     elif user_type == "Employee":
         appt_id_q = """SELECT appt_id
@@ -298,17 +288,15 @@ def get_appt_id(row, user_id, user_type):
         c.execute(appt_id_q)
         output = c.fetchone()
         if output is None:
-            print("No id found")
             return None
 
         return output[0]
 
-
 # Deletes an appointment given what row it is in the database (zero indexed)
 def delete_appt(row, user_id, user_type):
     appt_id = get_appt_id(row, user_id, user_type)
-    print(appt_id)
-    set_notification(appt_id)
+    if(appt_id != None):
+        set_notification(appt_id)
 
     del_request = """DELETE FROM Requests
                         WHERE appt_id = {}""".format(appt_id)
@@ -325,7 +313,7 @@ def delete_appt(row, user_id, user_type):
 
     commit()
 
-
+# Given a user type and their ID, this method sets the is_valid attribute in the database to false
 def delete_user(usr_type, usr_id):
     update_stmt = ""
     if usr_type == "Employee":
@@ -341,24 +329,25 @@ def delete_user(usr_type, usr_id):
     c.execute(update_stmt)
     commit()
 
-
+# Method takes an appointment ID and sets the has_notification attribute for everyone in that appointment to 1.
+# This can later be checked when the user logs in to determine if a notification shows up
 def set_notification(appt_id):
     pat_update = """UPDATE Patient
                         SET pat_notification = 1
                         WHERE pat_id = (SELECT pat_id
-                            FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Appointment
+                            FROM Patient NATURAL JOIN Requests NATURAL JOIN Appointment
                             WHERE appt_id = {})""".format(appt_id)
 
     dr_update = """UPDATE Employee
                             SET emp_notification = 1
                             WHERE emp_id = (SELECT emp_id
-                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment
                                 WHERE appt_id = {} AND emp_type LIKE "Doctor")""".format(appt_id)
 
     hyg_update = """UPDATE Employee
                             SET emp_notification = 1
                             WHERE emp_id = (SELECT emp_id
-                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Appointment
+                                FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment
                                 WHERE appt_id = {} AND emp_type LIKE "Hygienist")""".format(appt_id)
 
     c.execute(dr_update)
@@ -366,7 +355,8 @@ def set_notification(appt_id):
     c.execute(hyg_update)
     commit()
 
-
+# Returns 0 if the user doesn't have a notification,
+# if the user has a notification, it removes it and returns 1
 def has_notification(usr_type, usr_id):
     notification_q = ""
     if usr_type == "Employee":
@@ -387,7 +377,7 @@ def has_notification(usr_type, usr_id):
     else:
         return 0
 
-
+# Changes the has_notification attribute to 0 again, removing the notification from that user
 def remove_notification(usr_type, usr_id):
     remove_q = ""
     if usr_type == "Employee":
@@ -402,3 +392,42 @@ def remove_notification(usr_type, usr_id):
 
     c.execute(remove_q)
     commit()
+
+# Deletes all appointments associated with a user
+def del_user_apps(usr_type, usr_id):
+    del_appt = ""
+    del_requests = ""
+    del_works = ""
+
+    if usr_type == "Employee":
+        del_appt = """DELETE FROM Appointment
+                        WHERE appt_id = (SELECT appt_id
+                                          FROM  Employee NATURAL JOIN Works NATURAL JOIN Appointment
+                                          WHERE emp_id = {});""".format(usr_id)
+
+        del_works = """DELETE FROM Works
+                                WHERE emp_id = {}""".format(usr_id)
+
+        del_requests = """DELETE FROM Requests
+                                WHERE appt_id = (SELECT appt_id
+                                                  FROM Employee NATURAL JOIN Works NATURAL JOIN Appointment NATURAL JOIN Requests
+                                                  WHERE emp_id = {});""".format(usr_id)
+
+    elif usr_type == "Patient":
+        del_appt = """DELETE FROM Appointment
+                        WHERE appt_id = (SELECT appt_id
+                                          FROM  Patient NATURAL JOIN Requests NATURAL JOIN Appointment
+                                          WHERE pat_id = {});""".format(usr_id)
+
+        del_works = """DELETE FROM Works
+                        WHERE appt_id = (SELECT appt_id
+                                          FROM  Patient NATURAL JOIN Requests NATURAL JOIN Appointment NATURAL JOIN Works
+                                          WHERE pat_id = {});""".format(usr_id)
+
+        del_requests = """DELETE FROM Requests
+                            WHERE pat_id = {}""".format(usr_id)
+
+
+    c.execute(del_works)
+    c.execute(del_requests)
+    c.execute(del_appt)

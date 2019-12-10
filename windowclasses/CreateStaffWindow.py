@@ -1,5 +1,13 @@
+'''
+ This class handles user input and logic for when the Admin creates a new
+ employee account.
+
+ Author: Carl Atwell
+ Date: 12/10/2019
+'''
+from windowclasses import Help as help
+from windowclasses import WindowManager as wm
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,14 +16,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-from windowclasses import Help as help
-from windowclasses import WindowManager as wm
-
 import hashlib, binascii, os
 import db_control as db
 
-# This class handles the logic for when the Admin creates a new
-# employee account
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+
+
 class CreateStaffWindow(Screen):
     kv = Builder.load_file("stylefolders/csw.kv")
     fr_name = ObjectProperty(None)
@@ -51,13 +57,13 @@ class CreateStaffWindow(Screen):
 
     # Pop up window for giving the user feedback
     # handles errors or successful operations
-    def pop_up(self,header, message):
+    def pop_up(self, header, message):
         popup = Popup(title = header,
                       content = Label(text = message),
                       size_hint = (None, None), size = (400, 400))
         popup.open()
 
-    #Sets all user intput feilds to the empty string
+    # Sets all user intput feilds to the empty string
     def reset_inputs(self):
         self.fr_name.text = ""
         self.lt_name.text = ""
@@ -66,7 +72,7 @@ class CreateStaffWindow(Screen):
         self.password.text = ""
         self.emp_type.text = ""
 
-    # salts and hashes a given string. Returns the hash
+    # Salts and hashes a given string. Returns the hash. Used for password
     def hash_password(self, password):
         """Hash a password for storing."""
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
@@ -75,6 +81,7 @@ class CreateStaffWindow(Screen):
         pwdhash = binascii.hexlify(pwdhash)
         return (salt + pwdhash).decode('ascii')
 
+    # Sets help page text to useful info about the create staff window.
     def find_help(self):
         help.prev_window = "create_staff"
 

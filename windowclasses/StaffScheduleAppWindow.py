@@ -1,5 +1,17 @@
+'''
+ This class allows the user to enter a patient, doctor,
+ and hygienist email to create a new appointment.
+
+ Author: Carl Atwell
+ Date: 12/10/2019
+'''
+from windowclasses import StaffLoginWindow as slw
+from windowclasses import PatientLoginWindow as plw
+from windowclasses import MakeAppointmentWindow as maw
+from windowclasses import WindowManager as wm
+from windowclasses import CalendarWindow as calendar
+from windowclasses import Help as help
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,15 +20,10 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-from windowclasses import StaffLoginWindow as slw
-from windowclasses import PatientLoginWindow as plw
-from windowclasses import MakeAppointmentWindow as maw
-from windowclasses import WindowManager as wm
-from windowclasses import CalendarWindow as calendar
-from windowclasses import Help as help
-
-
 import db_control as db
+
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+
 
 class StaffScheduleAppWindow(Screen):
     kv = Builder.load_file("stylefolders/ssaw.kv")
@@ -25,7 +32,8 @@ class StaffScheduleAppWindow(Screen):
     pat_email = ObjectProperty(None)
     descrp = ObjectProperty(None)
 
-
+    # Grabs the user's input, validates it, and takes
+    # the user to the calendar window.
     def get_input(self):
         dr_id = db.get_emp_id(self.dr_email.text)
         hy_id = db.get_emp_id(self.hy_email.text)
@@ -54,6 +62,7 @@ class StaffScheduleAppWindow(Screen):
                       size_hint = (None, None), size = (400, 400))
         popup.open()
 
+    # Sets the Help screen text to useful information about the page.
     def find_help(self):
         help.prev_window = "staff_sched_app"
 

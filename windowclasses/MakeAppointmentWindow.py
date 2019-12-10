@@ -1,5 +1,15 @@
+'''
+ This class handles the logic for the make appointment window.
+ Allows the user to enter an appointment description and
+ pick an Doctor and Hygienist.
+
+ Author: Carl Atwell, Darian Boeck
+ Date: 12/10/2019
+'''
+from windowclasses import WindowManager as wm
+from windowclasses import PatientLoginWindow as plw
+from windowclasses import Help as help
 from kivy.config import Config
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -8,15 +18,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-
-from windowclasses import WindowManager as wm
-from windowclasses import PatientLoginWindow as plw
-from windowclasses import Help as help
-
 import db_control as db
 
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 dr_info = [None] * 4
-# This class handles the logic for the make appointment window
+
+
 class MakeAppointmentWindow(Screen):
     kv = Builder.load_file("stylefolders/maw.kv")
     description = ObjectProperty(None)
@@ -47,7 +54,7 @@ class MakeAppointmentWindow(Screen):
         if(self.list_filled == False):
             emp_list = db.list_employees()
             for employee in emp_list:
-                if(employee[0] == "Doctor"):
+                if(employee[0] == "Doctor" and db.is_valid(employee[3], "Employee")):
                     self.dr_list.append(employee)
             self.list_filled = True
         y_pos = .6
@@ -63,7 +70,7 @@ class MakeAppointmentWindow(Screen):
     def choose_hygen(self):
         emp_list = db.list_employees()
         for employee in emp_list:
-            if(employee[0] == "Hygienist"):
+            if(employee[0] == "Hygienist" and db.is_valid(employee[3], "Employee")):
                 self.dr_list.append(employee)
         y_pos = .6
         for doctor in self.dr_list:
@@ -87,6 +94,8 @@ class MakeAppointmentWindow(Screen):
         self.no_func("Choose a hygienist")
         self.choose_hygen()
 
+    # Pulls chosen hygienists, removes the buttons, and sets
+    # the page to calendar
     def hygen_pressed(self, instance):
         for doctor in self.dr_list:
             dr = "{} {}".format(doctor[1], doctor[2])
@@ -98,6 +107,8 @@ class MakeAppointmentWindow(Screen):
         wm.screen_manager.current = "calendar"
         self.description.text = ""
 
+    # Sets the Help screen's text to useful information about
+    # the page.
     def find_help(self):
         help.prev_window = "make_appointment"
 
